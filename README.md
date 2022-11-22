@@ -4,5 +4,7 @@
 ## Usage
 
 Import by:   
-
+```
 import "github.com/mihonen/polynomials"
+
+```
