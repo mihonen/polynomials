@@ -1,7 +1,7 @@
 ![Logo](./images/golynomials.png)
 
 # Polynomials for Go
-### A Go package that handles the most essential polynomial operations, such as derivatives and root solving
+### A Go package that handles the most essential polynomial operations
 
 ## Usage
 
@@ -13,3 +13,6 @@ import "github.com/mihonen/polynomials"
 
 
 
+## Derivatives
+
+## Root Solving
