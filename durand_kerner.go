@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-const eps float64 = 1e-7 // max error allowed
+const eps float64 = 1e-10 // max error allowed
 
 func (poly *Polynomial) EhrlichRadius() float64 {
 	if poly.Degree() == 0 { return 1.0 }
@@ -22,7 +22,7 @@ func (poly *Polynomial) EhrlichRadius() float64 {
 
 
 
-func (poly *Polynomial) DurandKerner() ([]complex128, error){
+func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 	n := poly.Degree()
 
 	roots    := make([]complex128, n )

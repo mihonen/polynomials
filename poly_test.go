@@ -2,11 +2,66 @@ package polynomials
 
 
 import (
+	"fmt"
     "testing"
-
 )
 
 
+
+func TestDurandKerner(t *testing.T){
+	a := 1.0
+	b := 3.0
+	c := -1.5
+	d := -8.0
+	e := -12.5
+
+	poly := CreatePolynomial(a, b, c, d, e)
+
+	roots, err := poly.ComplexRoots()
+	if err != nil {
+		t.Fatalf(`Roots() errored: %v`, err)
+	}
+
+	sol1 := complex(1.8892177902751495, 0)
+	sol2 := complex(-3.071745756398733, 0)
+	sol3 := complex(-0.9087360169382082, 1.152468686777906)
+	sol4 := complex(-0.9087360169382082, -1.152468686777906)
+
+	solutions := make(map[complex128]bool)
+	solutions[sol1] = true
+	solutions[sol2] = true
+	solutions[sol3] = true
+	solutions[sol4] = true
+
+	for _, root := range roots {
+
+		for solution := range solutions {
+			if root == RoundC(solution) {
+				delete(solutions, solution)
+				break
+			}
+		}
+	}
+
+    var resultStr string = "\n"
+    for _, r := range roots {
+        resultStr += fmt.Sprintf("%v\n", r)
+    }
+    allSolutions := []complex128{sol1, sol2, sol3, sol4}
+    var solutionStr string = "\n"
+    for _, s := range allSolutions {
+        solutionStr += fmt.Sprintf("%v\n", s)
+    }
+
+	if len(solutions) != 0 {
+		t.Fatalf(`Roots() failed to find all correct roots! 
+		Found roots: %s. 
+		Correct roots: %s`, 
+		resultStr, 
+		solutionStr)
+	}
+
+}
 
 func TestPoly(t *testing.T){
 	a := 1.0
@@ -46,9 +101,9 @@ func TestQudratic(t *testing.T) {
 
     test_poly := CreatePolynomial(a, b, c)
 
-    roots, err := test_poly.PositiveRoots()
+    roots, err := test_poly.Roots()
     if err != nil {
-    	t.Fatalf(`PositiveRoots() errored: %v`, err)
+    	t.Fatalf(`Roots() errored: %v`, err)
     }
 
     var found1, found2 bool
