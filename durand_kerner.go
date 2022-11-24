@@ -2,6 +2,7 @@ package polynomials
 
 import (
 	"math"
+	"errors"
 )
 
 const eps float64 = 1e-10 // max error allowed
@@ -44,7 +45,6 @@ func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 		itCtr := 0
 		flag := true
 
-		// rootsNew = roots[:]
 
 		for flag {
 			flag = false
@@ -59,7 +59,7 @@ func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 				rootsNew[k] = roots[k] - poly.AtComplex(roots[k]) / temp
 
 				if math.Abs(real(roots[k]) - real(rootsNew[k])) > eps{
-					// print abs(roots[k] - rootsNew[k])
+
 					flag = true
 				}
 
@@ -75,6 +75,9 @@ func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 
 			copy(roots, rootsNew)
 			itCtr += 1
+			if itCtr > durandKernerMaxIter {
+				return []complex128{}, errors.New("DurandKerner method failed to converge before max number of iterations was exceeded!")
+			}
 		}
 
 	}

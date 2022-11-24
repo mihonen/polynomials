@@ -17,7 +17,7 @@ import "github.com/mihonen/polynomials"
 
 ## Root Solving
 
-Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, [Durand-Kerner method](https://en.wikipedia.org/wiki/Durand–Kerner_method) is used. This method can solve all complex roots. 
+Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, [Durand-Kerner method](https://en.wikipedia.org/wiki/Durand–Kerner_method) is used. This method should be able to solve all complex roots for polynomials upto around 100 degrees.
 
 ### Getting Complex Roots
 
@@ -35,7 +35,7 @@ roots, err := poly.Roots()
 
 
 ## Examples 
-### Solving All Roots for P(x) = 3x^3 + 2x^2 -x + 13 
+### Solving All Roots for $(P(x) = 3x^3 + 2x^2 -x + 13 )
 
 
 ```
