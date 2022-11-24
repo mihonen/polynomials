@@ -82,6 +82,15 @@ roots, err := poly.Roots()
 ```
 
 
+## Precision
+
+Golynomials solves roots to the 9th decimal by default. This can be adjusted in config.go if needed.
+
+
+
+
+
+
 
 
 
