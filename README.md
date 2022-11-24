@@ -35,7 +35,7 @@ roots, err := poly.Roots()
 
 
 ## Examples 
-### Solving All Roots for $(P(x) = 3x^3 + 2x^2 -x + 13 )
+### Solving All Roots for $(P(x) = 3x^3 + 2x^2 -x + 13 )$
 
 
 ```
