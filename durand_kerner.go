@@ -5,7 +5,6 @@ import (
 	"errors"
 )
 
-const eps float64 = 1e-10 // max error allowed
 
 func (poly *Polynomial) EhrlichRadius() float64 {
 	if poly.Degree() == 0 { return 1.0 }
