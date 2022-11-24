@@ -34,9 +34,7 @@ func (poly *Polynomial) At(x float64) float64 {
 
 	for i := 1; i < n; i++ {
 		out = out * x + poly.coeffs[i]
-	}
-
-    
+	}    
 
 	return Round(out)
 }
