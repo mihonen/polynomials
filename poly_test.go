@@ -9,6 +9,7 @@ import (
 
 
 func TestDurandKerner(t *testing.T){
+	
 	a := 1.0
 	b := 3.0
 	c := -1.5
