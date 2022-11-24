@@ -14,6 +14,11 @@ import "github.com/mihonen/polynomials"
 
 
 ## Derivatives
+A derivative can be obtained by: 
+```
+derivative := poly.Derivative()
+
+```
 
 ## Root Solving
 
@@ -55,6 +60,26 @@ roots, err := poly.Roots()
 
 ```
 
+### Solving Real Roots for $P(x) = x^4 + 2x^2 -10$
+
+
+```
+    a :=  1.0
+    b :=  0.0
+    c :=  2.0
+    d :=  0.0
+    e := -10.0
+
+    poly := polynomials.CreatePolynomial(a, b, c, d, e)
+
+    roots, err := poly.Roots()
+    if err != nil {
+        log.Printf(`Roots() errored: %v`, err)
+        return
+    }
+    // Use roots
+
+```
 
 
 
