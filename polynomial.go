@@ -29,42 +29,28 @@ func (poly *Polynomial) Degree() int {
 // At returns the value of the polynomial evaluated at x.
 func (poly *Polynomial) At(x float64) float64 {
 	// Implement Horner's Method
-	length := len(poly.coeffs)
-	out := poly.coeffs[length-1]
-	for i := length - 2; i >= 0; i-- {
-		out = out*x + poly.coeffs[i]
-	}
-	return out
-}
+	n := len(poly.coeffs)
+	out := poly.coeffs[0]
 
-func (poly *Polynomial) PositiveRoots() ([]float64, error){
-	return poly.Roots()
-}
-
-func (poly *Polynomial) Roots() ([]float64, error){
-	if poly.Degree() == 2 {
-		return poly.QuadraticRoots(), nil
-	} else {
-		return poly.NumericalRoots()
-	}
-}
-
-func (poly *Polynomial) NumericalRoots() ([]float64, error){
-	return []float64{}, nil
-}
-
-func (poly *Polynomial) Derivative() *Polynomial {
-	if poly.Degree() == 0 {
-		deriv := CreatePolynomial(0)
-		return deriv
+	for i := 1; i < n; i++ {
+		out = out * x + poly.coeffs[i]
 	}
 
-	nDerivativeCoeffs := len(poly.coeffs) - 1
-	derivativeCoeffs := make([]float64, nDerivativeCoeffs)
-	for i := 0; i < nDerivativeCoeffs; i++ {
-		derivativeCoeffs[i] = poly.coeffs[i+1] * float64(i+1)
+    
+
+	return Round(out)
+}
+
+
+// AtComplex returns the value of the polynomial evaluated at z
+func (poly *Polynomial) AtComplex(z complex128) complex128 {
+	// Implement Horner's Method for complex input z
+	t := complex(0, 0)
+	for _, c := range poly.coeffs {
+		t = t * z + complex(c, 0)
 	}
 
-	deriv := CreatePolynomial(derivativeCoeffs...)
-	return deriv
+    return RoundC(t)
 }
+
+
