@@ -1,8 +1,10 @@
 package polynomials
 
 import (
+	//"log"
 	"math"
-	"errors"
+	"math/rand"
+	//"errors"
 )
 
 
@@ -20,67 +22,61 @@ func (poly *Polynomial) EhrlichRadius() float64 {
     return r
 }
 
+func (poly *Polynomial) Bound() float64 {
+	
+
+    n := len(poly.coeffs) - 1
+    b := 0.0
+
+	reversed := make([]float64, len(poly.coeffs))
+	copy(reversed, poly.coeffs)
+	Reverse(reversed)
+
+    for i := 0; i < n; i++ {
+        b += math.Abs(reversed[i] / reversed[i + 1])   
+    }
+
+    return b
+}
 
 
 func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 	n := poly.Degree()
-
 	roots    := make([]complex128, n )
-	rootsNew := make([]complex128, n)
+	// rootsNew := make([]complex128, n)
+	// theta  := 2.0 * math.Pi / float64(n)
+	bnd    := poly.Bound()
 
-	radius := poly.EhrlichRadius()
-	theta  := 2.0 * math.Pi / float64(n)
-	offset := theta / (float64(n) + 1.0)
-
-	retry  := true
-
-	for retry{
-		retry = false
-		// set initial roots as uniformly distributed points within ehrlich circle
-		for k := 0; k < n; k++ {
-			roots[k] = complex(radius * math.Cos(float64(k) * theta + offset), radius * math.Sin(float64(k) * theta + offset))
-		}
-
-		itCtr := 0
-		flag := true
-
-
-		for flag {
-			flag = false
-			for k := 0; k < n; k++ {
-				temp := complex(1.0, 0.0)
-				for j := 0; j < n; j++ {
-				    if j != k {
-				        temp *= roots[k] - roots[j]
-				    }
-				}
-
-				rootsNew[k] = roots[k] - poly.AtComplex(roots[k]) / temp
-
-				if math.Abs(real(roots[k]) - real(rootsNew[k])) > eps{
-
-					flag = true
-				}
-
-				if math.IsNaN(real(rootsNew[k])) || math.IsNaN(imag(rootsNew[k])){
-					flag = false
-					retry = true
-					break
-				}
-
-
-			}
-
-
-			copy(roots, rootsNew)
-			itCtr += 1
-			if itCtr > durandKernerMaxIter {
-				return []complex128{}, errors.New("DurandKerner method failed to converge before max number of iterations was exceeded!")
-			}
-		}
-
+	for k := 0; k < n; k++ {
+		r := bnd * rand.Float64()
+		theta := 2.0 * math.Pi * rand.Float64()
+		roots[k] = complex(r * math.Cos(theta), r * math.Sin(theta))
 	}
 
+	max_delta := 1.0
+
+	for i := 0; i < durandKernerMaxIter; i++ {
+		max_delta = 0
+		for k := 0; k < n; k++ {
+			// deno := complex(1.0, 0.0)
+			delta := poly.AtComplex(roots[k])
+			for j := 0; j < n; j++ {
+
+			    if j != k {
+			        delta /= (roots[k] - roots[j])
+			    }
+			}
+			roots[k] -= delta
+
+			max_delta += ((real(delta) * real(delta)) +
+			              (imag(delta) * imag(delta))) / float64(n)
+		}
+		               
+		max_delta = max_delta * max_delta
+		if max_delta < eps {
+			break
+		}           
+	}
 	
 	return roots, nil
 }

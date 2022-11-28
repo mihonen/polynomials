@@ -8,6 +8,52 @@ import (
 
 
 
+
+func TestPositiveRoots(t *testing.T){
+
+	a := 1.0
+	b := 1.5958982
+	c := -13.00789
+	d := -12.13037
+	e := 5.74231
+
+
+	poly := CreatePolynomial(a, b, c, d, e)
+
+	roots, err := poly.Roots()
+	if err != nil {
+		t.Fatalf(`Roots() errored: %v`, err)
+	}
+
+	fmt.Println(roots)
+}
+
+
+func TestCreatePower(t *testing.T){
+	x_3 := CreatePower(3)
+	if len(x_3.coeffs) != 4 || x_3.coeffs[0] != 1.0 {
+		t.Fatalf(`CreatePower() failed`,)
+	}
+}
+
+
+func TestDerivative(t *testing.T) {
+	a := 1.0
+	b := 1.0 
+	c := 0.0
+	d := -1.0 
+	e := -1.0
+
+	poly := CreatePolynomial(a, b, c, d, e)
+	sol := []float64{4.0, 3.0, 0.0, -1.0}
+
+	deriv := poly.Derivative()
+
+	if deriv.Degree() != 3 || deriv.coeffs[0] != 4 || deriv.coeffs[1] != 3 || deriv.coeffs[2] != 0 || deriv.coeffs[3] != -1 {
+		t.Fatalf(`Derivative() failed. Expected coeffs: %v. Received coeffs: %v`, sol, deriv.coeffs)
+	}
+}
+
 func TestDurandKerner(t *testing.T){
 	
 	a := 1.0
