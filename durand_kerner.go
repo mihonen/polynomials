@@ -1,10 +1,8 @@
 package polynomials
 
 import (
-	//"log"
 	"math"
 	"math/rand"
-	//"errors"
 )
 
 

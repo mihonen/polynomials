@@ -9,7 +9,7 @@ import (
 
 
 
-func TestPositiveRoots(t *testing.T){
+func TestRealRoots(t *testing.T){
 
 	a := 1.0
 	b := 1.5958982
@@ -25,7 +25,7 @@ func TestPositiveRoots(t *testing.T){
 		t.Fatalf(`Roots() errored: %v`, err)
 	}
 
-	fmt.Println(roots)
+	fmt.Println("Roots() OK")
 }
 
 
@@ -34,6 +34,8 @@ func TestCreatePower(t *testing.T){
 	if len(x_3.coeffs) != 4 || x_3.coeffs[0] != 1.0 {
 		t.Fatalf(`CreatePower() failed`,)
 	}
+
+	fmt.Println("CreatePower() OK")
 }
 
 
@@ -52,6 +54,8 @@ func TestDerivative(t *testing.T) {
 	if deriv.Degree() != 3 || deriv.coeffs[0] != 4 || deriv.coeffs[1] != 3 || deriv.coeffs[2] != 0 || deriv.coeffs[3] != -1 {
 		t.Fatalf(`Derivative() failed. Expected coeffs: %v. Received coeffs: %v`, sol, deriv.coeffs)
 	}
+
+	fmt.Println("Derivative() OK")
 }
 
 func TestDurandKerner(t *testing.T){
@@ -108,6 +112,8 @@ func TestDurandKerner(t *testing.T){
 		solutionStr)
 	}
 
+	fmt.Println("DurandKerner() OK")
+
 }
 
 func TestPoly(t *testing.T){
@@ -135,9 +141,11 @@ func TestPoly(t *testing.T){
 		t.Fatalf(`At() returned wrong solution: %v Expected: %v`, result2, solution2)
 	}
 
+	fmt.Println("Polynomial OK")
+
 }
 
-func TestQudratic(t *testing.T) {
+func TestQuadratic(t *testing.T) {
 	a := 1.0
 	b := 5.0
 	c := 6.0
