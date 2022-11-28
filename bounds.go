@@ -4,10 +4,8 @@ import (
 	"math"
 )
 
+
 // https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#Bounds_on_(complex)_polynomial_roots
-
-
-
 // Cauchy's bound
 
 func (poly *Polynomial) RootBounds() (float64, float64){

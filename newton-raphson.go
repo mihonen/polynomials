@@ -7,7 +7,7 @@ import (
 	"errors"
 )
 
-// Implement Newton's Method
+// Newton's Method Implementation
 // https://en.wikipedia.org/wiki/Newton%27s_method
 func (poly *Polynomial) NewtonMethod(guess float64) (float64, error) {
 

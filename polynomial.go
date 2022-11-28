@@ -5,6 +5,8 @@ import (
 )
 
 // A Polynomial is represented as a slice of coefficients ordered increasingly by degree.
+// eg. coeffs[0] * x^4 + coeffs[1] * x^3 coeffs[2] * x^2 ...
+//
 
 type Polynomial struct {
 	coeffs []float64
@@ -102,7 +104,7 @@ func (poly *Polynomial) computeSturmChain(){
 
 		tmp = *sturmChain[i-1]
 		_, rem = tmp.EuclideanDiv(sturmChain[i])
-		sturmChain = append(sturmChain, rem.MulS(-1))
+		sturmChain = append(sturmChain, rem.ScalarMult(-1))
 	}
 
 	poly.sturmChain = sturmChain
@@ -114,7 +116,7 @@ func (poly *Polynomial) LeadingCoeff() float64 {
 	return poly.coeffs[0]
 }
 
-// EuclideanDiv divides the polynomial by rp2 and returns the result as a quotient-remainder pair.
+// EuclideanDiv divides the polynomial by another polynomial and returns the quotient and the remainder
 //
 // https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclidean_division
 // https://rosettacode.org/wiki/Polynomial_long_division#Go
@@ -125,7 +127,7 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
 	}
 
 	if poly2.IsZero() {
-		panic("RealPolynomial division by zero")
+		panic("EuclideanDiv division by zero")
 	}
 
 	// q := CreatePolynomial(0)
@@ -145,9 +147,6 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
 
     // return q, r
 
-        // Using special properties of the ordered coefficient system, we can divide polynomials
-    // via shifts:
-    // https://rosettacode.org/wiki/Polynomial_long_division
     quotCoeffs := make([]float64, poly1.Degree() - poly2.Degree() + 1)
     var d *Polynomial
     var shift int
@@ -161,49 +160,13 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
 
     	factor = r.LeadingCoeff() / d.LeadingCoeff()
     	quotCoeffs[shift] = factor
-    	d = d.MulS(factor)
+    	d = d.ScalarMult(factor)
     	r = r.Sub(d)
     }
 
 
     quotient := CreatePolynomial(quotCoeffs...)
     return quotient, r
-
-
-	// // N, D, q, r are vectors
-	// if degree(D) < 0 then error
-	// q ← 0
-	// while degree(N) ≥ degree(D)
-	//   d ← D shifted right by (degree(N) - degree(D))
-	//   q(degree(N) - degree(D)) ← N(degree(N)) / d(degree(d))
-	//   // by construction, degree(d) = degree(N) of course
-	//   d ← d * q(degree(N) - degree(D))
-	//   N ← N - d
-	// endwhile
-	// r ← N
-	// return (q, r)
-
-
-
-    // nn = append(r, nn...)
-    // if degree(nn) >= degree(dd) {
-    //     q = make([]float64, degree(nn)-degree(dd)+1)
-    //     for degree(nn) >= degree(dd) {
-    //         d := make([]float64, degree(nn)+1)
-    //         copy(d[degree(nn)-degree(dd):], dd)
-    //         q[degree(nn)-degree(dd)] = nn[degree(nn)] / d[degree(d)]
-    //         for i := range d {
-    //             d[i] *= q[degree(nn)-degree(dd)]
-    //             nn[i] -= d[i]
-    //         }
-    //     }
-    // }
-    // return q, nn, true
-
-
-
-
-
 }
 
 
@@ -214,8 +177,8 @@ func (poly *Polynomial) ShiftRight(offset int) *Polynomial {
 	}
 	shiftedCoeffs := make([]float64, len(poly.coeffs) + offset)
 	copy(shiftedCoeffs[offset:], poly.coeffs)
-	poly = CreatePolynomial(shiftedCoeffs...)
-	return poly
+	shifted := CreatePolynomial(shiftedCoeffs...)
+	return shifted
 }
 
 
@@ -263,7 +226,6 @@ func (poly1 *Polynomial) Mult(poly2 *Polynomial) *Polynomial {
 
 	for i := 0; i < len(poly1.coeffs); i++ {
 		for j := 0; j < len(poly2.coeffs); j++ {
-			// We use += since we may visit the same index multiple times
 			prodCoeffs[i+j] += poly1.coeffs[i] * poly2.coeffs[j]
 		}
 	}
@@ -272,7 +234,7 @@ func (poly1 *Polynomial) Mult(poly2 *Polynomial) *Polynomial {
 	return prod
 }
 
-func (poly *Polynomial) MulS(s float64) *Polynomial {
+func (poly *Polynomial) ScalarMult(s float64) *Polynomial {
 
 	coeffs := make([]float64, len(poly.coeffs))
 
@@ -288,7 +250,6 @@ func (poly *Polynomial) MulS(s float64) *Polynomial {
 
 
 func (poly1 *Polynomial) Add(poly2 *Polynomial) *Polynomial {
-
 
 	var maxNumCoeffs int
 	coeffs1 := poly1.coeffs

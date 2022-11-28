@@ -1,7 +1,6 @@
 package polynomials
 
 import (
-	"log"
 	"errors"
 )
 
@@ -26,24 +25,8 @@ func (poly *Polynomial) Roots() ([]float64, error){
 	if poly.Degree() == 2 {
 		return poly.QuadraticRoots(), nil
 	} else {
-
 		lowerBound, upperBound := poly.RootBounds()
-
 		return poly.RootsWithin(lowerBound, upperBound)
-		/*
-		rRoots := []float64{}
-		cRoots, err := poly.ComplexRoots()
-		if err != nil {
-			return []float64{}, err
-		}
-
-		for _, cRoot := range cRoots{
-			if imag(cRoot) == 0 {
-				rRoots = append(rRoots, real(cRoot))
-			}
-		}
-		return rRoots, nil
-		*/
 	}
 }
 
@@ -69,14 +52,14 @@ func (poly *Polynomial) RootsWithin(lowerBound float64, upperBound float64) ([]f
 	}
 
 	roots := []float64{}
-	// Since we operate on the half-open interval (a, b], manually check if a is a root.
+	// Check if lowerBound is a root
 	if poly.At(lowerBound) == 0.0 {
 		roots = append(roots, lowerBound)
 	}
 
 
 	isolationIntervals := poly.findIsolationIntervals(lowerBound, upperBound)
-	log.Println(isolationIntervals)
+
 	for _, isolationInterval := range isolationIntervals {
 		root, err := poly.NewtonMethod(isolationInterval.Mid())
 		if err != nil {
@@ -134,14 +117,13 @@ func (poly *Polynomial) countRootsWithin(a, b float64) int {
 		seqA = append(seqA, p.At(a))
 		seqB = append(seqB, p.At(b))
 	}
-	return countSignVariations(seqA) - countSignVariations(seqB)
+	return signVar(seqA) - signVar(seqB)
 }
 
 
 
-// Counts sign variations in s: https://en.wikipedia.org/wiki/Budan%27s_theorem#Sign_variation
-func countSignVariations(s []float64) int {
-	// Filter zeroes in s.
+func signVar(s []float64) int {
+
 	var filtered []float64
 	for i := 0; i < len(s); i++ {
 		if s[i] != 0.0 {
@@ -149,7 +131,7 @@ func countSignVariations(s []float64) int {
 		}
 	}
 
-	// Count sign changes.
+	// Count sign variations
 	var count int
 	for i := 0; i < len(filtered)-1; i++ {
 		if filtered[i]*filtered[i+1] < 0 {
