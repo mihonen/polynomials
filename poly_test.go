@@ -8,6 +8,24 @@ import (
 
 
 
+func TestNoSolution(t *testing.T){
+
+	a := 1.0
+	b := -6.0
+	c := 15.0
+	d := -18.0
+	e := 10.0
+
+	poly := CreatePolynomial(a, b, c, d, e)
+
+	roots, err := poly.Roots()
+	if err != nil {
+		t.Fatalf(`Roots() errored: %v`, err)
+	}
+
+	fmt.Println("No Solution Roots() OK")
+}
+
 
 func TestRealRoots(t *testing.T){
 
@@ -20,7 +38,7 @@ func TestRealRoots(t *testing.T){
 
 	poly := CreatePolynomial(a, b, c, d, e)
 
-	roots, err := poly.Roots()
+	_, err := poly.Roots()
 	if err != nil {
 		t.Fatalf(`Roots() errored: %v`, err)
 	}
