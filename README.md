@@ -36,7 +36,7 @@ roots, err := poly.ComplexRoots()
 
 ```
 
-### Getting Real Roots Only
+### Getting Real Roots
 
 ```
 roots, err := poly.Roots()
@@ -93,8 +93,10 @@ Golynomials solves roots to the 9th decimal by default. This can be adjusted in 
 
 
 
+## TODO
 
 
+- [ ] Check that root returned by Newton's method lies in the given interval
 
 
 
