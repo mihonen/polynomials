@@ -22,7 +22,12 @@ derivative := poly.Derivative()
 
 ## Root Solving
 
-Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, [Durand-Kerner method](https://en.wikipedia.org/wiki/Durand–Kerner_method) is used. This method should be able to solve all complex roots for polynomials upto around 100 degrees.
+Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, a combination of bisection method and Newton-method is used as described in this [Wikipedia page](https://en.wikipedia.org/wiki/Real-root_isolation#Bisection_method). The package first utilizes [Sturm's theorem](https://en.wikipedia.org/wiki/Sturm%27s_theorem) to seek for intervals which hold exactly one real root. It then finds the roots numerically using [Newton's-method](https://en.wikipedia.org/wiki/Newton%27s_method).  
+  
+  
+
+
+For finding complex roots, the package uses [Durand-Kerner method](https://en.wikipedia.org/wiki/Durand–Kerner_method). This method should be able to solve all complex roots for polynomials upto around 100 degrees. 
 
 ### Getting Complex Roots
 
@@ -40,7 +45,7 @@ roots, err := poly.Roots()
 
 
 ## Examples 
-### Solving All Roots for $P(x) = 3x^3 + 2x^2 -x + 13$
+### Solving Complex Roots for $P(x) = 3x^3 + 2x^2 -x + 13$
 
 
 ```
