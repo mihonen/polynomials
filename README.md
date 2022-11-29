@@ -98,6 +98,7 @@ Golynomials solves roots to the 9th decimal by default. This can be adjusted in 
 
 - [ ] Check that root returned by Newton's method lies in the given interval
 
+- [ ] Add functionalities for solving minimums and maximums
 
 
 
