@@ -1,7 +1,7 @@
 package polynomials
 
 import (
-
+	"math"
 )
 
 // A Polynomial is represented as a slice of coefficients ordered increasingly by degree.
@@ -24,6 +24,8 @@ func CreatePolynomial(coefficients ...float64) (*Polynomial) {
 	for _, coeff := range coefficients {
 		if coeff == 0.0 {
 			stripped = stripped[1:]
+		} else if math.IsNaN(coeff){
+			panic("Cannot create polynomial with NaN coefficient!")
 		} else {
 			break
 		}
