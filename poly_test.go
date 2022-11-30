@@ -71,7 +71,7 @@ func TestNoSolution(t *testing.T){
 }
 
 
-func TestRealRoots(t *testing.T){
+func TestRealRoots1(t *testing.T){
 
 	// a := 1.0
 	// b := 1.5958982
@@ -83,9 +83,48 @@ func TestRealRoots(t *testing.T){
 
 	poly := CreatePolynomial(coeffs...)
 
-	_, err := poly.Roots()
+	roots, err := poly.Roots()
 	if err != nil {
 		t.Fatalf(`Roots() errored: %v`, err)
+	}
+
+	sol1 := 0.009729823715772645
+	sol2 := 8.858183272729985
+
+	solutions := make(map[float64]bool)
+
+	solutions[sol1] = true
+	solutions[sol2] = true
+
+
+
+	for _, root := range roots {
+
+		for solution := range solutions {
+			if root == Round(solution) {
+				delete(solutions, solution)
+				break
+			}
+		}
+	}
+
+    var resultStr string = "\n"
+    for _, r := range roots {
+        resultStr += fmt.Sprintf("%v\n", r)
+    }
+
+    solutionsSlice := []float64{sol1, sol2}
+    var solutionStr string = "\n"
+    for _, s := range solutionsSlice {
+        solutionStr += fmt.Sprintf("%v\n", Round(s))
+    }
+
+	if len(solutions) != 0 {
+		t.Fatalf(`Failed to find all correct real roots! 
+		Found roots: %s. 
+		Correct roots: %s`, 
+		resultStr, 
+		solutionStr)
 	}
 
 	fmt.Println("Real Roots ............ OK")

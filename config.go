@@ -12,5 +12,6 @@ const (
 	durandKernerMaxIter = 5000
 	maxNewtonIterations = 25
 	roundingDecimalPlaces = 9
-	eps = 1e-16 // max error allowed
+	epsNewton = 1e-10 // max error allowed
+	epsDurand = 1e-16
 )

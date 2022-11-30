@@ -92,6 +92,13 @@ roots, err := poly.Roots()
 Golynomials solves roots to the 9th decimal by default. This can be adjusted in config.go if needed.
 
 
+## Testing
+
+To run all tests, run the following command in terminal
+```
+go test
+
+```
 
 ## TODO
 

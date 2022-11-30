@@ -71,7 +71,7 @@ func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 		}
 		               
 		max_delta = max_delta * max_delta
-		if max_delta < eps {
+		if max_delta < epsDurand {
 			break
 		}           
 	}

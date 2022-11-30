@@ -26,7 +26,17 @@ func (poly *Polynomial) Roots() ([]float64, error){
 		return poly.QuadraticRoots(), nil
 	} else {
 		lowerBound, upperBound := poly.RootBounds()
-		return poly.RootsWithin(lowerBound, upperBound)
+		roots, err := poly.RootsWithin(lowerBound, upperBound)
+
+		if err != nil {
+			return []float64{}, err
+		}
+
+		for idx, root := range roots {
+			roots[idx] = Round(root)
+		}
+
+		return roots, nil
 	}
 }
 

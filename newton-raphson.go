@@ -24,7 +24,7 @@ func (poly *Polynomial) NewtonMethod(guess float64) (float64, error) {
 		}
 		prev = root
 		root -= poly.At(root) / derivAtRoot
-		if math.Abs(prev - root) < eps {
+		if math.Abs(prev - root) < epsNewton {
 			return root, nil
 		}
 	}
