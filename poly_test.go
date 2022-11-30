@@ -6,7 +6,47 @@ import (
     "testing"
 )
 
+func TestPolynomialLongDivision(t *testing.T){
+	N := CreatePolynomial(1.0, -5.0, 12.0, -2.8)
+	D := CreatePolynomial(1.0, -3.0)
 
+	q, _ := N.EuclideanDiv(D)
+
+	if q.Degree() != 2 || q.coeffs[0] != 1.0 || q.coeffs[1] != -2.0 || q.coeffs[2] != 6.0 {
+		t.Fatalf(`EuclideanDiv() returned wrong quotient: %v. True quotient: %f %f %f`, q.coeffs, 1.0, -2.0, 6.0)
+		fmt.Println()
+	}
+
+	fmt.Println("EuclideanDiv .......... OK")
+
+}
+
+func TestShiftRight(t *testing.T){
+	poly := CreatePolynomial(1.0, 2.0, 3.0)
+
+	shifted := poly.ShiftRight(2)
+
+	if shifted.Degree() != 4 || shifted.coeffs[0] != 1.0 {
+		t.Fatalf(`ShiftRight() returned wrong solution: %v. True solution: %v`, shifted, []float64{1.0, 2.0, 3.0, 0.0, 0.0})
+	}
+
+	fmt.Println("ShiftRight ............ OK")
+
+}
+
+
+func TestStuckLoop(t *testing.T){
+	// Test with high precision floats that they don't cause errors that block the package
+	coeffs := []float64{-0.0005148053170874375, 0.01177362691607392, -0.10824061093058787, 0.07523007124191312, -0.4864048905537971}
+	poly := CreatePolynomial(coeffs...)
+
+	_, err := poly.Roots()
+	if err != nil {
+		t.Fatalf(`Roots() errored: %v`, err)
+	}
+
+	fmt.Println("Infinite Loop Test .... OK")
+}
 
 func TestNoSolution(t *testing.T){
 
@@ -27,7 +67,7 @@ func TestNoSolution(t *testing.T){
 		t.Fatalf(`Roots() returned: %v for polynomial with no roots!`, roots)
 	}
 
-	fmt.Println("No Solution Roots() ... OK")
+	fmt.Println("No Real Roots ......... OK")
 }
 
 
@@ -47,18 +87,10 @@ func TestRealRoots(t *testing.T){
 	if err != nil {
 		t.Fatalf(`Roots() errored: %v`, err)
 	}
-	fmt.Println("Roots() ............... OK")
+
+	fmt.Println("Real Roots ............ OK")
 }
 
-
-func TestCreatePower(t *testing.T){
-	x_3 := CreatePower(3)
-	if len(x_3.coeffs) != 4 || x_3.coeffs[0] != 1.0 {
-		t.Fatalf(`CreatePower() failed`,)
-	}
-
-	fmt.Println("CreatePower() ......... OK")
-}
 
 
 func TestDerivative(t *testing.T) {
@@ -77,10 +109,10 @@ func TestDerivative(t *testing.T) {
 		t.Fatalf(`Derivative() failed. Expected coeffs: %v. Received coeffs: %v`, sol, deriv.coeffs)
 	}
 
-	fmt.Println("Derivative() .......... OK")
+	fmt.Println("Derivative ............ OK")
 }
 
-func TestDurandKerner(t *testing.T){
+func TestComplexRoots(t *testing.T){
 	
 	a := 1.0
 	b := 3.0
@@ -127,15 +159,14 @@ func TestDurandKerner(t *testing.T){
     }
 
 	if len(solutions) != 0 {
-		t.Fatalf(`Roots() failed to find all correct roots! 
+		t.Fatalf(`Failed to find all correct complex roots! 
 		Found roots: %s. 
 		Correct roots: %s`, 
 		resultStr, 
 		solutionStr)
 	}
 
-
-	fmt.Println("DurandKerner() ........ OK")
+	fmt.Println("Complex Roots ......... OK")
 
 }
 

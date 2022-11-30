@@ -57,9 +57,7 @@ func (poly *Polynomial) RootsWithin(lowerBound float64, upperBound float64) ([]f
 		roots = append(roots, lowerBound)
 	}
 
-
 	isolationIntervals := poly.findIsolationIntervals(lowerBound, upperBound)
-
 	for _, isolationInterval := range isolationIntervals {
 		root, err := poly.NewtonMethod(isolationInterval.Mid())
 		if err != nil {
@@ -84,6 +82,7 @@ func (poly *Polynomial) findIsolationIntervals(a float64, b float64) ([]Interval
 
 	if nRoots > 1 {
 		// Divide interval further into two intervals
+		// log.Printf("%d ROOTS IN [%f, %f]", nRoots, a, b)
 		mp := (a + b) / 2.0
 		intervals1 := poly.findIsolationIntervals(a, mp)
 		intervals2 := poly.findIsolationIntervals(mp, b)

@@ -22,7 +22,7 @@ derivative := poly.Derivative()
 
 ## Root Solving
 
-Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, a combination of bisection method and Newton-method is used as described in this [Wikipedia page](https://en.wikipedia.org/wiki/Real-root_isolation#Bisection_method). The package first utilizes [Sturm's theorem](https://en.wikipedia.org/wiki/Sturm%27s_theorem) to seek for intervals which hold exactly one real root. It then finds the roots numerically using [Newton's-method](https://en.wikipedia.org/wiki/Newton%27s_method).  
+Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, a combination of bisection method and Newton-method is used as described in this [Wikipedia page](https://en.wikipedia.org/wiki/Real-root_isolation#Bisection_method) and this [page](https://en.wikipedia.org/wiki/Sturm%27s_theorem#Root_isolation). The package first utilizes [Sturm's theorem](https://en.wikipedia.org/wiki/Sturm%27s_theorem) to seek for intervals which hold exactly one real root. It then finds the roots numerically using [Newton's-method](https://en.wikipedia.org/wiki/Newton%27s_method).  
   
   
 

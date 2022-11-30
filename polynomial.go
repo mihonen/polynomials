@@ -33,7 +33,15 @@ func CreatePolynomial(coefficients ...float64) (*Polynomial) {
 
 	newPolynomial.coeffs = append([]float64{}, stripped...)
 	
+	newPolynomial.RoundCoeffs()
+
 	return &newPolynomial
+}
+
+func (poly *Polynomial) RoundCoeffs(){
+	for idx, coeff := range poly.coeffs {
+		poly.coeffs[idx] = Round(coeff)
+	}
 }
 
 // Creates simple power polynomial, eg. x^3
@@ -105,7 +113,9 @@ func (poly *Polynomial) computeSturmChain(){
 		}
 
 		tmp = *sturmChain[i-1]
+
 		_, rem = tmp.EuclideanDiv(sturmChain[i])
+
 		sturmChain = append(sturmChain, rem.ScalarMult(-1))
 	}
 
@@ -141,7 +151,7 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
     // 	factor := (r.LeadingCoeff() / c) 
     // 	power  := (r.Degree() - d)
     // 	s := CreatePower(power)
-    // 	s = s.MulS(factor)
+    // 	s = s.ScalarMult(factor)
     //     q = q.Add(s)
     //     r = r.Sub(s.Mult(poly2))
     //     log.Println(r)
@@ -149,7 +159,23 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
 
     // return q, r
 
-    quotCoeffs := make([]float64, poly1.Degree() - poly2.Degree() + 1)
+    // polynomial_long_division(N, D) returns (q, r):
+    //   // N, D, q, r are vectors
+    //   if degree(D) < 0 then error
+    //   q ← 0
+    //   while degree(N) ≥ degree(D)
+    //     d ← D shifted right by (degree(N) - degree(D))
+    //     q(degree(N) - degree(D)) ← N(degree(N)) / d(degree(d))
+    //     // by construction, degree(d) = degree(N) of course
+    //     d ← d * q(degree(N) - degree(D))
+    //     N ← N - d
+    //   endwhile
+    //   r ← N
+    //   return (q, r)
+
+
+    quotDegree := poly1.Degree() - poly2.Degree()
+    quotCoeffs := make([]float64, quotDegree + 1)
     var d *Polynomial
     var shift int
     var factor float64
@@ -161,7 +187,7 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
     	d = poly2.ShiftRight(shift)
 
     	factor = r.LeadingCoeff() / d.LeadingCoeff()
-    	quotCoeffs[shift] = factor
+    	quotCoeffs[quotDegree - shift] = factor
     	d = d.ScalarMult(factor)
     	r = r.Sub(d)
     }
@@ -178,9 +204,9 @@ func (poly *Polynomial) ShiftRight(offset int) *Polynomial {
 		panic("invalid offset")
 	}
 	shiftedCoeffs := make([]float64, len(poly.coeffs) + offset)
-	copy(shiftedCoeffs[offset:], poly.coeffs)
-	shifted := CreatePolynomial(shiftedCoeffs...)
-	return shifted
+	copy(shiftedCoeffs, poly.coeffs)
+	poly = CreatePolynomial(shiftedCoeffs...)
+	return poly
 }
 
 
