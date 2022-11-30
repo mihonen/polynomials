@@ -128,10 +128,11 @@ func (poly *Polynomial) LeadingCoeff() float64 {
 	return poly.coeffs[0]
 }
 
-// EuclideanDiv divides the polynomial by another polynomial and returns the quotient and the remainder
+// EuclideanDiv aka. Polynomial Long Division 
+// divides the polynomial by another polynomial and returns the quotient and the remainder
 //
 // https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclidean_division
-// https://rosettacode.org/wiki/Polynomial_long_division#Go
+// https://rosettacode.org/wiki/Polynomial_long_division
 
 func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomial) {
 	if poly1 == nil || poly2 == nil {
@@ -141,37 +142,6 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
 	if poly2.IsZero() {
 		panic("EuclideanDiv division by zero")
 	}
-
-	// q := CreatePolynomial(0)
-    // r := poly1
-    // d := poly2.Degree()
-    // c := poly2.LeadingCoeff()
-
-    // for r.Degree() >= d {
-    // 	factor := (r.LeadingCoeff() / c) 
-    // 	power  := (r.Degree() - d)
-    // 	s := CreatePower(power)
-    // 	s = s.ScalarMult(factor)
-    //     q = q.Add(s)
-    //     r = r.Sub(s.Mult(poly2))
-    //     log.Println(r)
-    // }
-
-    // return q, r
-
-    // polynomial_long_division(N, D) returns (q, r):
-    //   // N, D, q, r are vectors
-    //   if degree(D) < 0 then error
-    //   q ← 0
-    //   while degree(N) ≥ degree(D)
-    //     d ← D shifted right by (degree(N) - degree(D))
-    //     q(degree(N) - degree(D)) ← N(degree(N)) / d(degree(d))
-    //     // by construction, degree(d) = degree(N) of course
-    //     d ← d * q(degree(N) - degree(D))
-    //     N ← N - d
-    //   endwhile
-    //   r ← N
-    //   return (q, r)
 
 
     quotDegree := poly1.Degree() - poly2.Degree()

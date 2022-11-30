@@ -100,6 +100,6 @@ Golynomials solves roots to the 9th decimal by default. This can be adjusted in 
 
 - [ ] Add functionalities for solving minimums and maximums
 
-
+- [ ] Implement more robust complex root finding algorithm, that finds the eigenvalues of the companion matrix
 
 
