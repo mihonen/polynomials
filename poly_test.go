@@ -6,6 +6,7 @@ import (
     "testing"
 )
 
+
 func TestPolynomialLongDivision(t *testing.T){
 	N := CreatePolynomial(1.0, -5.0, 12.0, -2.8)
 	D := CreatePolynomial(1.0, -3.0)

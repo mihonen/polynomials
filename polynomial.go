@@ -68,6 +68,8 @@ func (poly *Polynomial) Degree() int {
 func (poly *Polynomial) At(x float64) float64 {
 	// Implement Horner's Method
 	n := len(poly.coeffs)
+	if n == 0 { return 0 }
+
 	out := poly.coeffs[0]
 
 	for i := 1; i < n; i++ {
@@ -82,6 +84,8 @@ func (poly *Polynomial) At(x float64) float64 {
 func (poly *Polynomial) AtComplex(z complex128) complex128 {
 	// Implement Horner's Method for complex input z
 	t := complex(0, 0)
+	if len(poly.coeffs) == 0 { return t }
+	
 	for _, c := range poly.coeffs {
 		t = t * z + complex(c, 0)
 	}
