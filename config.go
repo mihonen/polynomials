@@ -14,4 +14,5 @@ const (
 	roundingDecimalPlaces = 9
 	epsNewton = 1e-10 // max error allowed
 	epsDurand = 1e-16
+	defaultSolvingMethod = Eigenvalue
 )

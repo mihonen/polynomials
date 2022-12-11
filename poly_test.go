@@ -72,6 +72,23 @@ func TestNoSolution(t *testing.T){
 }
 
 
+func TestMonic(t *testing.T){
+	poly := CreatePolynomial(0.5235, -12.40, 0.124, 4.411111114)
+	if poly.IsMonic() { 
+		t.Fatalf(`IsMonic() returned: %v. Correct: %v`, poly.IsMonic(), false)
+	}
+
+	poly.MakeMonic()
+
+	if !poly.IsMonic() { 
+		t.Fatalf(`MakeMonic() didn't make polynomial monic. Leading coeff should be 1.0. Found %f instead`, poly.LeadingCoeff())
+	}
+
+	fmt.Println("Monic Poly ............ OK")
+}
+
+
+
 func TestRealRoots1(t *testing.T){
 
 	// a := 1.0
@@ -209,6 +226,62 @@ func TestComplexRoots(t *testing.T){
 	fmt.Println("Complex Roots ......... OK")
 
 }
+
+func TestDifficultRoots(t *testing.T){
+	// Newtons method sometimes struggles to converge with this polynomial
+
+	coeffs := []float64{0.0004, 0.011042681, 0.077423224, 0.005671027, -0.000125438}
+	poly := CreatePolynomial(coeffs...)
+
+	sol1 := complex(0.01778822159056967, 0)
+	sol2 := complex(-0.09205210672114453, 0)
+	sol3 := complex(-13.766219307434705, 1.4164171575579814)
+	sol4 := complex(-13.766219307434705, -1.4164171575579814)
+
+	solutions := make(map[complex128]bool)
+	solutions[sol1] = true
+	solutions[sol2] = true
+	solutions[sol3] = true
+	solutions[sol4] = true
+
+	roots, err := poly.ComplexRoots()
+
+	if err != nil {
+		t.Fatalf(`ComplexRoots() errored: %v`, err)
+	}
+
+	for _, root := range roots {
+
+		for solution := range solutions {
+			if root == RoundC(solution) {
+				delete(solutions, solution)
+				break
+			}
+		}
+	}
+
+
+    var resultStr string = "\n"
+    for _, r := range roots {
+        resultStr += fmt.Sprintf("%v\n", r)
+    }
+    allSolutions := []complex128{sol1, sol2, sol3, sol4}
+    var solutionStr string = "\n"
+    for _, s := range allSolutions {
+        solutionStr += fmt.Sprintf("%v\n", s)
+    }
+
+	if len(solutions) != 0 {
+		t.Fatalf(`Failed to find all correct complex roots! 
+		Found roots: %s. 
+		Correct roots: %s`, 
+		resultStr, 
+		solutionStr)
+	}
+
+	fmt.Println("Difficult Roots ....... OK")
+}
+
 
 func TestPoly(t *testing.T){
 	a := 1.0

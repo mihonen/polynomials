@@ -2,7 +2,35 @@ package polynomials
 
 import (
 	"errors"
+	"gonum.org/v1/gonum/mat"
 )
+
+
+
+// Package has three solving methods
+// =================================
+// 1. Durand-Kerner method 
+//    https://en.wikipedia.org/wiki/Durand–Kerner_method
+//
+// 2. Root isolation + Newtons method 
+//    https://en.wikipedia.org/wiki/Sturm%27s_theorem#Root_isolation
+//	  https://en.wikipedia.org/wiki/Newton's_method
+//
+// 3. A method based on computing the companion matrix of the polynomial and solving its eigenvalues
+// 	  https://en.wikipedia.org/wiki/Eigenvalue_algorithm#Algorithms
+// 	  https://en.wikipedia.org/wiki/Companion_matrix
+//
+// The third method is usually the most robust
+
+
+type SolvingMethod int
+
+const (
+    DurandKerner SolvingMethod = iota
+    BisectionNewton
+    Eigenvalue 
+)
+
 
 
 func (poly *Polynomial) PositiveRoots() ([]float64, error){
@@ -25,23 +53,67 @@ func (poly *Polynomial) Roots() ([]float64, error){
 	if poly.Degree() == 2 {
 		return poly.QuadraticRoots(), nil
 	} else {
-		lowerBound, upperBound := poly.RootBounds()
-		roots, err := poly.RootsWithin(lowerBound, upperBound)
+		switch poly.solveMode {
+		case DurandKerner:
+			roots, err := poly.ComplexRootsDurandKerner()
+			realRoots := []float64{}
 
-		if err != nil {
-			return []float64{}, err
+			if err != nil {
+				return realRoots, err
+			}
+
+			for _, root := range roots{
+				if imag(root) == 0 {
+					realRoots = append(realRoots, real(root))
+				}
+			}
+
+			return realRoots, nil
+
+		case BisectionNewton:
+			return poly.RootsBisectionNewton()
+
+		case Eigenvalue:
+			roots, err := poly.ComplexRootsEigenvalue()
+			realRoots := []float64{}
+
+			if err != nil {
+				return realRoots, err
+			}
+
+			for _, root := range roots{
+				if imag(root) == 0 {
+					realRoots = append(realRoots, real(root))
+				}
+			}
+
+			return realRoots, nil
 		}
 
-		for idx, root := range roots {
-			roots[idx] = Round(root)
-		}
-
-		return roots, nil
+		
 	}
+
+	return []float64{}, errors.New("Could not solve polynomial")
 }
 
 
 func (poly *Polynomial) ComplexRoots() ([]complex128, error){
+	switch poly.solveMode {
+	case DurandKerner:
+		return poly.ComplexRootsDurandKerner()
+
+	case BisectionNewton:
+		return []complex128{}, errors.New("BisectionNewton solve mode cannot solve complex roots. Change to either DurandKerner or Eigenvalue method.")
+
+	case Eigenvalue:
+		return poly.ComplexRootsEigenvalue()
+	}
+
+	return []complex128{}, errors.New("Invalid solve mode")
+}
+
+
+func (poly *Polynomial) ComplexRootsDurandKerner() ([]complex128, error){
 	roots, err := poly.DurandKernerRoots()
 	if err != nil {
 		return []complex128{}, err
@@ -49,6 +121,44 @@ func (poly *Polynomial) ComplexRoots() ([]complex128, error){
 
 	for idx, root := range roots {
 		roots[idx] = RoundC(root)
+	}
+
+	return roots, nil
+}
+
+func (poly *Polynomial) ComplexRootsEigenvalue() ([]complex128, error){
+	poly.MakeMonic()
+	companionMatrix, err := poly.CompanionMatrix()
+
+	if err != nil {
+		return []complex128{}, err
+	}
+
+	var eig mat.Eigen
+	ok := eig.Factorize(companionMatrix, mat.EigenNone)
+	if !ok {
+		return []complex128{}, errors.New("Eigendecomposition failed")
+	}
+
+
+	roots := eig.Values(nil)
+	for idx, root := range roots {
+		roots[idx] = RoundC(root)
+	}
+
+	return roots, nil
+}
+
+func (poly *Polynomial) RootsBisectionNewton() ([]float64, error){
+	lowerBound, upperBound := poly.RootBounds()
+	roots, err := poly.RootsWithin(lowerBound, upperBound)
+
+	if err != nil {
+		return []float64{}, err
+	}
+
+	for idx, root := range roots {
+		roots[idx] = Round(root)
 	}
 
 	return roots, nil

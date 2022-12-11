@@ -11,6 +11,7 @@ import (
 type Polynomial struct {
 	coeffs []float64
 	sturmChain []*Polynomial
+	solveMode SolvingMethod
 }
 
 
@@ -32,9 +33,9 @@ func CreatePolynomial(coefficients ...float64) (*Polynomial) {
 	}
 
 	newPolynomial.coeffs = append([]float64{}, stripped...)
-	
 	newPolynomial.RoundCoeffs()
 
+	newPolynomial.solveMode = defaultSolvingMethod
 	return &newPolynomial
 }
 
@@ -62,6 +63,23 @@ func (poly *Polynomial) Degree() int {
 	// number of coefficients to be one less than the degree of the polynomial.
 	return len(poly.coeffs) - 1
 }
+
+func (poly *Polynomial) MakeMonic(){
+	// Divides the polynomial with the leading coefficient to make the polynomial monic
+	l := poly.LeadingCoeff()
+
+	for idx, coeff := range poly.coeffs{
+		poly.coeffs[idx] = coeff / l
+	}
+}
+
+
+func (poly *Polynomial) IsMonic() bool {
+	n := len(poly.coeffs)
+	if n <= 1 { return false }
+
+	return poly.coeffs[0] == 1.0
+}	
 
 
 // At returns the value of the polynomial evaluated at x.

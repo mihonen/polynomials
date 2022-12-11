@@ -29,5 +29,5 @@ func (poly *Polynomial) NewtonMethod(guess float64) (float64, error) {
 		}
 	}
 
-	return root, errors.New("NewtonRaphson didn't converge before max number of iteration was reached!")
+	return root, errors.New("NewtonRaphson didn't converge before max number of iteration was reached! Result may be incorrect")
 }
