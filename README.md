@@ -23,13 +23,13 @@ derivative := poly.Derivative()
 ## Root Solving
 Golynomials has three methods for solving roots of polynomials. 
 
-| Method               | Complex Roots |  Average solve time<sup>1</sup>  | 
-| -----------          | -----------   | --------------------------- |
-| Durand-Kerner        | ✅            | 6.623µs                     |
-| Bisection + Newton   | ❌            | 7.38µs                      |
-| Eigenvalue           | ✅            | 142.292µs                   |
+| Method               | Complex Roots |  Average solve time<sup>1</sup>  | Robustness |
+| -----------          | -----------   | --------------------------- |        🥉        |
+| Durand-Kerner        | ✅            | 6.623µs                     |           🥈      |
+| Bisection + Newton   | ❌            | 7.38µs                      |                 |
+| Eigenvalue           | ✅            | 142.292µs                   |         🥇        |
 
-<sup>2</sup> Tested with 5 runs for polynomial: $P(x) = 1.13x^4 - 5.0x^3 + 12.0x^2, -2.8x + 3.213$
+<sup>1</sup> Tested with 5 runs for polynomial: $P(x) = 1.13x^4 - 5.0x^3 + 12.0x^2 -2.8x + 3.213$
 
 
 Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. The default method for higher order polynomials computes the companion matrix of the polynomial and finds the eigenvalues of the matrix using [mat package](https://pkg.go.dev/gonum.org/v1/gonum/mat). 
