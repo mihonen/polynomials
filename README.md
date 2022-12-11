@@ -24,10 +24,10 @@ derivative := poly.Derivative()
 Golynomials has three methods for solving roots of polynomials. 
 
 | Method               | Complex Roots |  Average solve time<sup>1</sup>  | Robustness |
-| -----------          | -----------   | --------------------------- |        🥉        |
-| Durand-Kerner        | ✅            | 6.623µs                     |           🥈      |
-| Bisection + Newton   | ❌            | 7.38µs                      |                 |
-| Eigenvalue           | ✅            | 142.292µs                   |         🥇        |
+| -----------          | -----------   | --------------------------- |      -----------|
+| Durand-Kerner        | ✅            | 6.623µs                     |         🥉     |
+| Bisection + Newton   | ❌            | 7.38µs                      |         🥈     |
+| Eigenvalue           | ✅            | 142.292µs                   |         🥇     |
 
 <sup>1</sup> Tested with 5 runs for polynomial: $P(x) = 1.13x^4 - 5.0x^3 + 12.0x^2 -2.8x + 3.213$
 
