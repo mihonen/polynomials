@@ -21,13 +21,33 @@ derivative := poly.Derivative()
 ```
 
 ## Root Solving
+Golynomials has three methods for solving roots of polynomials. 
 
-Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. For higher order polynomials, a combination of bisection method and Newton-method is used as described in this [Wikipedia page](https://en.wikipedia.org/wiki/Real-root_isolation#Bisection_method) and this [page](https://en.wikipedia.org/wiki/Sturm%27s_theorem#Root_isolation). The package first utilizes [Sturm's theorem](https://en.wikipedia.org/wiki/Sturm%27s_theorem) to seek for intervals which hold exactly one real root. It then finds the roots numerically using [Newton's-method](https://en.wikipedia.org/wiki/Newton%27s_method).  
-  
-  
+| Method               | Complex Roots |  Uses external depedencies  | 
+| -----------          | -----------   | --------------------------- |
+| Durand-Kerner        | ✅            | ❌                         |
+| Bisection + Newton   | ❌            | ❌                         |
+| Eigenvalue           | ✅            | ✅                         |
 
 
-For finding complex roots, the package uses [Durand-Kerner method](https://en.wikipedia.org/wiki/Durand–Kerner_method). This method should be able to solve all complex roots for polynomials upto around 100 degrees. 
+Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. The default method for higher order polynomials computes the companion matrix of the polynomial and finds the eigenvalues of the matrix using [mat package](https://pkg.go.dev/gonum.org/v1/gonum/mat). 
+
+
+
+The second available method is a combination of bisection method and Newton-method as described in [this](https://en.wikipedia.org/wiki/Real-root_isolation#Bisection_method) and this [page](https://en.wikipedia.org/wiki/Sturm%27s_theorem#Root_isolation). This method first utilizes [Sturm's theorem](https://en.wikipedia.org/wiki/Sturm%27s_theorem) to seek for intervals which hold exactly one real root. It then finds the roots numerically using [Newton's-method](https://en.wikipedia.org/wiki/Newton%27s_method).  
+    
+    
+
+The third available method is the [Durand-Kerner method](https://en.wikipedia.org/wiki/Durand–Kerner_method). This method should be able to solve all complex roots for polynomials upto around 100 degrees. 
+    
+    
+
+Used method can be changed by changing the field solveMode of the polynomial. For example
+```
+poly.solveMode = DurandKerner
+
+```
+
 
 ### Getting Complex Roots
 
@@ -107,6 +127,6 @@ go test
 
 - [ ] Add functionalities for solving minimums and maximums
 
-- [ ] Implement more robust complex root finding algorithm, that finds the eigenvalues of the companion matrix
+- [x] Implement more robust complex root finding algorithm, that finds the eigenvalues of the companion matrix
 
 
