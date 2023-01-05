@@ -33,7 +33,7 @@ func CreatePolynomial(coefficients ...float64) (*Polynomial) {
 	}
 
 	newPolynomial.coeffs = append([]float64{}, stripped...)
-	newPolynomial.RoundCoeffs()
+	//newPolynomial.RoundCoeffs()
 
 	newPolynomial.solveMode = defaultSolvingMethod
 	return &newPolynomial

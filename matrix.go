@@ -2,7 +2,6 @@ package polynomials
 
 
 import (
-	"log"
 	"errors"
 	"gonum.org/v1/gonum/mat"
 )
@@ -14,7 +13,6 @@ import (
 
 func (poly *Polynomial) CompanionMatrix() (*mat.Dense, error) {
 	if !poly.IsMonic() {
-		log.Println(poly)
 		return nil, errors.New("Polynomial is not monic. Cannot create companion matrix")
 	}
 
