@@ -41,9 +41,9 @@ func TestStuckLoop(t *testing.T){
 	coeffs := []float64{-0.0005148053170874375, 0.01177362691607392, -0.10824061093058787, 0.07523007124191312, -0.4864048905537971}
 	poly := CreatePolynomial(coeffs...)
 
-	_, err := poly.Roots()
+	_, err := poly.RealRoots()
 	if err != nil {
-		t.Fatalf(`Roots() errored: %v`, err)
+		t.Fatalf(`RealRoots() errored: %v`, err)
 	}
 
 	fmt.Println("Infinite Loop Test .... OK")
@@ -59,13 +59,13 @@ func TestNoSolution(t *testing.T){
 
 	poly := CreatePolynomial(a, b, c, d, e)
 
-	roots, err := poly.Roots()
+	roots, err := poly.RealRoots()
 	if err != nil {
-		t.Fatalf(`Roots() errored: %v`, err)
+		t.Fatalf(`RealRoots() errored: %v`, err)
 	}
 
 	if len(roots) != 0 {
-		t.Fatalf(`Roots() returned: %v for polynomial with no roots!`, roots)
+		t.Fatalf(`RealRoots() returned: %v for polynomial with no roots!`, roots)
 	}
 
 	fmt.Println("No Real Roots ......... OK")
@@ -101,18 +101,19 @@ func TestRealRoots1(t *testing.T){
 
 	poly := CreatePolynomial(coeffs...)
 
-	roots, err := poly.Roots()
+	roots, err := poly.RealRoots()
 	if err != nil {
-		t.Fatalf(`Roots() errored: %v`, err)
+		t.Fatalf(`RealRoots() errored: %v`, err)
 	}
 
-	sol1 := 0.009729823715772645
-	sol2 := 8.858183272729985
+	sol1 := 0.0097298237865678
+	sol2 := 8.8581832960302
 
 	solutions := make(map[float64]bool)
 
 	solutions[sol1] = true
 	solutions[sol2] = true
+
 
 
 
@@ -181,7 +182,7 @@ func TestComplexRoots(t *testing.T){
 
 	roots, err := poly.ComplexRoots()
 	if err != nil {
-		t.Fatalf(`Roots() errored: %v`, err)
+		t.Fatalf(`RealRoots() errored: %v`, err)
 	}
 
 	sol1 := complex(1.8892177902751495, 0)
@@ -312,7 +313,7 @@ func TestPoly(t *testing.T){
 
 }
 
-func TestQuadratic(t *testing.T) {
+func TestQuadraticReal(t *testing.T) {
 	a := 1.0
 	b := 5.0
 	c := 6.0
@@ -323,7 +324,7 @@ func TestQuadratic(t *testing.T) {
 
     test_poly := CreatePolynomial(a, b, c)
 
-    roots, err := test_poly.Roots()
+    roots, err := test_poly.RealRoots()
     if err != nil {
     	t.Fatalf(`Roots() errored: %v`, err)
     }
@@ -340,11 +341,49 @@ func TestQuadratic(t *testing.T) {
     }
 
     if !found1 || !found2 {
-    	t.Fatalf(`Roots() returned wrong solutions`)
+    	t.Fatalf(`RealRoots() returned wrong solutions`)
     }
 
 
-	fmt.Println("Quadratic Roots ....... OK")
+	fmt.Println("Quadratic Real Roots .. OK")
+
+}
+
+
+func TestQuadraticComplex(t *testing.T) {
+	a := -3.0
+	b :=  1.33
+	c := -2.5
+
+	solution1 := complex(0.22166666666666, -0.88554910774176)
+	solution2 := complex(0.22166666666666, +0.88554910774176)
+	
+	
+
+    test_poly := CreatePolynomial(a, b, c)
+
+    roots, err := test_poly.ComplexRoots()
+    if err != nil {
+    	t.Fatalf(`Roots() errored: %v`, err)
+    }
+
+    var found1, found2 bool
+
+    for _, root := range roots {
+    	if RoundC(root) == RoundC(solution1) {
+    		found1 = true
+    	}
+    	if RoundC(root) == RoundC(solution2) {
+    		found2 = true
+    	}
+    }
+
+    if !found1 || !found2 {
+    	t.Fatalf(`ComplexRoots() returned wrong solutions: %v Expected: %v, %v`, roots, solution1, solution2)
+    }
+
+
+	fmt.Println("Quadratic Imag Roots .. OK")
 
 }
 

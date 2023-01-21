@@ -33,9 +33,9 @@ const (
 
 
 
-func (poly *Polynomial) PositiveRoots() ([]float64, error){
+func (poly *Polynomial) PositiveRoots() ([]float64, error) {
 	pRoots := []float64{}
-	roots, err := poly.Roots()
+	roots, err := poly.RealRoots()
 	if err != nil {
 		return []float64{}, err
 	}
@@ -49,67 +49,66 @@ func (poly *Polynomial) PositiveRoots() ([]float64, error){
 	return pRoots, nil
 }
 
-func (poly *Polynomial) Roots() ([]float64, error){
+
+
+func (poly *Polynomial) RealRoots() ([]float64, error){
+
+	realRoots := []float64{}
+
+
 	if poly.Degree() == 2 {
-		return poly.QuadraticRoots(), nil
+		complexRoots := poly.QuadraticRoots()
+		realRoots = getRealParts(complexRoots)
 	} else {
 		switch poly.solveMode {
 		case DurandKerner:
-			roots, err := poly.ComplexRootsDurandKerner()
-			realRoots := []float64{}
 
+			complexRoots, err := poly.ComplexRootsDurandKerner()
 			if err != nil {
 				return realRoots, err
 			}
-
-			for _, root := range roots{
-				if imag(root) == 0 {
-					realRoots = append(realRoots, real(root))
-				}
-			}
-
-			return realRoots, nil
+			realRoots = getRealParts(complexRoots)
 
 		case BisectionNewton:
-			return poly.RootsBisectionNewton()
-
-		case Eigenvalue:
-			roots, err := poly.ComplexRootsEigenvalue()
-			realRoots := []float64{}
-
+			roots, err := poly.RootsBisectionNewton()
 			if err != nil {
 				return realRoots, err
 			}
-
-			for _, root := range roots{
-				if imag(root) == 0 {
-					realRoots = append(realRoots, real(root))
-				}
+			realRoots = roots
+			
+		case Eigenvalue:
+			complexRoots, err := poly.ComplexRootsEigenvalue();
+			if err != nil {
+				return realRoots, err
 			}
-
-			return realRoots, nil
+			realRoots = getRealParts(complexRoots)
 		}
 
-		
 	}
 
-	return []float64{}, errors.New("Could not solve polynomial")
+	return realRoots, nil
 }
 
 
 func (poly *Polynomial) ComplexRoots() ([]complex128, error){
-	switch poly.solveMode {
-	case DurandKerner:
-		return poly.ComplexRootsDurandKerner()
 
-	case BisectionNewton:
-		return []complex128{}, errors.New("BisectionNewton solve mode cannot solve complex roots. Change to either DurandKerner or Eigenvalue method.")
+	if poly.Degree() == 2{
+		return poly.QuadraticRoots(), nil
+	} else {
+		switch poly.solveMode {
+		case DurandKerner:
+			return poly.ComplexRootsDurandKerner()
 
-	case Eigenvalue:
-		return poly.ComplexRootsEigenvalue()
+		case BisectionNewton:
+			return []complex128{}, errors.New("BisectionNewton solve mode cannot solve complex roots. Change to either DurandKerner or Eigenvalue method.")
+
+		case Eigenvalue:
+			return poly.ComplexRootsEigenvalue()
+		}
+
+		return []complex128{}, errors.New("Invalid solve mode")
 	}
 
-	return []complex128{}, errors.New("Invalid solve mode")
 }
 
 
