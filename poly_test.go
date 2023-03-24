@@ -35,6 +35,16 @@ func TestShiftRight(t *testing.T){
 
 }
 
+func TestMissingCoeffs(t *testing.T){
+	coeffs := []float64{2.4, 0.0, -0.12}
+	poly := CreatePolynomial(coeffs...)
+	_, err := poly.RealRoots()
+	if err != nil {
+		t.Fatalf(`RealRoots() errored: %v`, err)
+	}
+
+	fmt.Println("Missing Coeffs ........ OK")
+}
 
 func TestStuckLoop(t *testing.T){
 	// Test with high precision floats that they don't cause errors that block the package

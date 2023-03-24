@@ -56,7 +56,9 @@ func (poly *Polynomial) RealRoots() ([]float64, error){
 	realRoots := []float64{}
 
 
-	if poly.Degree() == 2 {
+	if poly.Degree() == 0{
+		return []float64{}, nil
+	} else if poly.Degree() == 2 {
 		complexRoots := poly.QuadraticRoots()
 		realRoots = getRealParts(complexRoots)
 	} else {
@@ -92,8 +94,14 @@ func (poly *Polynomial) RealRoots() ([]float64, error){
 
 func (poly *Polynomial) ComplexRoots() ([]complex128, error){
 
-	if poly.Degree() == 2{
+	if poly.Degree() == 0{
+
+		return []complex128{}, nil
+
+	} else if poly.Degree() == 2{
+
 		return poly.QuadraticRoots(), nil
+
 	} else {
 		switch poly.solveMode {
 		case DurandKerner:
