@@ -1,13 +1,11 @@
 package polynomials
 
-
 import (
 	"fmt"
-    "testing"
+	"testing"
 )
 
-
-func TestPolynomialLongDivision(t *testing.T){
+func TestPolynomialLongDivision(t *testing.T) {
 	N := CreatePolynomial(1.0, -5.0, 12.0, -2.8)
 	D := CreatePolynomial(1.0, -3.0)
 
@@ -22,7 +20,7 @@ func TestPolynomialLongDivision(t *testing.T){
 
 }
 
-func TestShiftRight(t *testing.T){
+func TestShiftRight(t *testing.T) {
 	poly := CreatePolynomial(1.0, 2.0, 3.0)
 
 	shifted := poly.ShiftRight(2)
@@ -35,7 +33,7 @@ func TestShiftRight(t *testing.T){
 
 }
 
-func TestMissingCoeffs(t *testing.T){
+func TestMissingCoeffs(t *testing.T) {
 	coeffs := []float64{2.4, 0.0, -0.12}
 	poly := CreatePolynomial(coeffs...)
 	_, err := poly.RealRoots()
@@ -46,7 +44,7 @@ func TestMissingCoeffs(t *testing.T){
 	fmt.Println("Missing Coeffs ........ OK")
 }
 
-func TestStuckLoop(t *testing.T){
+func TestStuckLoop(t *testing.T) {
 	// Test with high precision floats that they don't cause errors that block the package
 	coeffs := []float64{-0.0005148053170874375, 0.01177362691607392, -0.10824061093058787, 0.07523007124191312, -0.4864048905537971}
 	poly := CreatePolynomial(coeffs...)
@@ -59,7 +57,7 @@ func TestStuckLoop(t *testing.T){
 	fmt.Println("Infinite Loop Test .... OK")
 }
 
-func TestNoSolution(t *testing.T){
+func TestNoSolution(t *testing.T) {
 
 	a := 1.0
 	b := -6.0
@@ -81,25 +79,22 @@ func TestNoSolution(t *testing.T){
 	fmt.Println("No Real Roots ......... OK")
 }
 
-
-func TestMonic(t *testing.T){
+func TestMonic(t *testing.T) {
 	poly := CreatePolynomial(0.5235, -12.40, 0.124, 4.411111114)
-	if poly.IsMonic() { 
+	if poly.IsMonic() {
 		t.Fatalf(`IsMonic() returned: %v. Correct: %v`, poly.IsMonic(), false)
 	}
 
 	poly.MakeMonic()
 
-	if !poly.IsMonic() { 
+	if !poly.IsMonic() {
 		t.Fatalf(`MakeMonic() didn't make polynomial monic. Leading coeff should be 1.0. Found %f instead`, poly.LeadingCoeff())
 	}
 
 	fmt.Println("Monic Poly ............ OK")
 }
 
-
-
-func TestRealRoots1(t *testing.T){
+func TestRealRoots1(t *testing.T) {
 
 	// a := 1.0
 	// b := 1.5958982
@@ -124,9 +119,6 @@ func TestRealRoots1(t *testing.T){
 	solutions[sol1] = true
 	solutions[sol2] = true
 
-
-
-
 	for _, root := range roots {
 
 		for solution := range solutions {
@@ -137,35 +129,33 @@ func TestRealRoots1(t *testing.T){
 		}
 	}
 
-    var resultStr string = "\n"
-    for _, r := range roots {
-        resultStr += fmt.Sprintf("%v\n", r)
-    }
+	var resultStr string = "\n"
+	for _, r := range roots {
+		resultStr += fmt.Sprintf("%v\n", r)
+	}
 
-    solutionsSlice := []float64{sol1, sol2}
-    var solutionStr string = "\n"
-    for _, s := range solutionsSlice {
-        solutionStr += fmt.Sprintf("%v\n", Round(s))
-    }
+	solutionsSlice := []float64{sol1, sol2}
+	var solutionStr string = "\n"
+	for _, s := range solutionsSlice {
+		solutionStr += fmt.Sprintf("%v\n", Round(s))
+	}
 
 	if len(solutions) != 0 {
 		t.Fatalf(`Failed to find all correct real roots! 
 		Found roots: %s. 
-		Correct roots: %s`, 
-		resultStr, 
-		solutionStr)
+		Correct roots: %s`,
+			resultStr,
+			solutionStr)
 	}
 
 	fmt.Println("Real Roots ............ OK")
 }
 
-
-
 func TestDerivative(t *testing.T) {
 	a := 1.0
-	b := 1.0 
+	b := 1.0
 	c := 0.0
-	d := -1.0 
+	d := -1.0
 	e := -1.0
 
 	poly := CreatePolynomial(a, b, c, d, e)
@@ -180,8 +170,8 @@ func TestDerivative(t *testing.T) {
 	fmt.Println("Derivative ............ OK")
 }
 
-func TestComplexRoots(t *testing.T){
-	
+func TestComplexRoots(t *testing.T) {
+
 	a := 1.0
 	b := 3.0
 	c := -1.5
@@ -216,29 +206,29 @@ func TestComplexRoots(t *testing.T){
 		}
 	}
 
-    var resultStr string = "\n"
-    for _, r := range roots {
-        resultStr += fmt.Sprintf("%v\n", r)
-    }
-    allSolutions := []complex128{sol1, sol2, sol3, sol4}
-    var solutionStr string = "\n"
-    for _, s := range allSolutions {
-        solutionStr += fmt.Sprintf("%v\n", s)
-    }
+	var resultStr string = "\n"
+	for _, r := range roots {
+		resultStr += fmt.Sprintf("%v\n", r)
+	}
+	allSolutions := []complex128{sol1, sol2, sol3, sol4}
+	var solutionStr string = "\n"
+	for _, s := range allSolutions {
+		solutionStr += fmt.Sprintf("%v\n", s)
+	}
 
 	if len(solutions) != 0 {
 		t.Fatalf(`Failed to find all correct complex roots! 
 		Found roots: %s. 
-		Correct roots: %s`, 
-		resultStr, 
-		solutionStr)
+		Correct roots: %s`,
+			resultStr,
+			solutionStr)
 	}
 
 	fmt.Println("Complex Roots ......... OK")
 
 }
 
-func TestDifficultRoots(t *testing.T){
+func TestDifficultRoots(t *testing.T) {
 	// Newtons method sometimes struggles to converge with this polynomial
 
 	coeffs := []float64{0.0004, 0.011042681, 0.077423224, 0.005671027, -0.000125438}
@@ -271,30 +261,28 @@ func TestDifficultRoots(t *testing.T){
 		}
 	}
 
-
-    var resultStr string = "\n"
-    for _, r := range roots {
-        resultStr += fmt.Sprintf("%v\n", r)
-    }
-    allSolutions := []complex128{sol1, sol2, sol3, sol4}
-    var solutionStr string = "\n"
-    for _, s := range allSolutions {
-        solutionStr += fmt.Sprintf("%v\n", s)
-    }
+	var resultStr string = "\n"
+	for _, r := range roots {
+		resultStr += fmt.Sprintf("%v\n", r)
+	}
+	allSolutions := []complex128{sol1, sol2, sol3, sol4}
+	var solutionStr string = "\n"
+	for _, s := range allSolutions {
+		solutionStr += fmt.Sprintf("%v\n", s)
+	}
 
 	if len(solutions) != 0 {
 		t.Fatalf(`Failed to find all correct complex roots! 
 		Found roots: %s. 
-		Correct roots: %s`, 
-		resultStr, 
-		solutionStr)
+		Correct roots: %s`,
+			resultStr,
+			solutionStr)
 	}
 
 	fmt.Println("Difficult Roots ....... OK")
 }
 
-
-func TestPoly(t *testing.T){
+func TestPoly(t *testing.T) {
 	a := 1.0
 	b := 5.0
 	c := 6.0
@@ -331,69 +319,82 @@ func TestQuadraticReal(t *testing.T) {
 	solution1 := -2.0
 	solution2 := -3.0
 
+	test_poly := CreatePolynomial(a, b, c)
 
-    test_poly := CreatePolynomial(a, b, c)
+	roots, err := test_poly.RealRoots()
+	if err != nil {
+		t.Fatalf(`Roots() errored: %v`, err)
+	}
 
-    roots, err := test_poly.RealRoots()
-    if err != nil {
-    	t.Fatalf(`Roots() errored: %v`, err)
-    }
+	var found1, found2 bool
 
-    var found1, found2 bool
+	for _, root := range roots {
+		if root == solution1 {
+			found1 = true
+		}
+		if root == solution2 {
+			found2 = true
+		}
+	}
 
-    for _, root := range roots {
-    	if root == solution1{
-    		found1 = true
-    	}
-    	if root == solution2 {
-    		found2 = true
-    	}
-    }
-
-    if !found1 || !found2 {
-    	t.Fatalf(`RealRoots() returned wrong solutions`)
-    }
-
+	if !found1 || !found2 {
+		t.Fatalf(`RealRoots() returned wrong solutions`)
+	}
 
 	fmt.Println("Quadratic Real Roots .. OK")
 
 }
 
-
 func TestQuadraticComplex(t *testing.T) {
 	a := -3.0
-	b :=  1.33
+	b := 1.33
 	c := -2.5
 
 	solution1 := complex(0.22166666666666, -0.88554910774176)
 	solution2 := complex(0.22166666666666, +0.88554910774176)
-	
-	
 
-    test_poly := CreatePolynomial(a, b, c)
+	test_poly := CreatePolynomial(a, b, c)
 
-    roots, err := test_poly.ComplexRoots()
-    if err != nil {
-    	t.Fatalf(`Roots() errored: %v`, err)
-    }
+	roots, err := test_poly.ComplexRoots()
+	if err != nil {
+		t.Fatalf(`Roots() errored: %v`, err)
+	}
 
-    var found1, found2 bool
+	var found1, found2 bool
 
-    for _, root := range roots {
-    	if RoundC(root) == RoundC(solution1) {
-    		found1 = true
-    	}
-    	if RoundC(root) == RoundC(solution2) {
-    		found2 = true
-    	}
-    }
+	for _, root := range roots {
+		if RoundC(root) == RoundC(solution1) {
+			found1 = true
+		}
+		if RoundC(root) == RoundC(solution2) {
+			found2 = true
+		}
+	}
 
-    if !found1 || !found2 {
-    	t.Fatalf(`ComplexRoots() returned wrong solutions: %v Expected: %v, %v`, roots, solution1, solution2)
-    }
-
+	if !found1 || !found2 {
+		t.Fatalf(`ComplexRoots() returned wrong solutions: %v Expected: %v, %v`, roots, solution1, solution2)
+	}
 
 	fmt.Println("Quadratic Imag Roots .. OK")
 
 }
 
+func TestString(t *testing.T) {
+	for test_poly, solution := range map[*Polynomial]string{
+		CreatePolynomial(1.0, -2.0, 3.0): "1.000x^2 - 2.000x + 3.000",
+		CreatePolynomial(1.0):            "1.000",
+		CreatePolynomial(-1.0):           "- 1.000",
+		CreatePolynomial(-1.0, 3.0):      "- 1.000x + 3.000",
+		CreatePolynomial(1.0, 0.0, 3.0):  "1.000x^2 + 3.000",
+	} {
+		t.Run(solution, func(t *testing.T) {
+			result := test_poly.String()
+
+			if result != solution {
+				t.Fatalf(`String() returned wrong solution: %s Expected: %s`, result, solution)
+			}
+		})
+	}
+
+	fmt.Println("String ................ OK")
+}

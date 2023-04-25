@@ -1,7 +1,9 @@
 package polynomials
 
 import (
+	"fmt"
 	"math"
+	"strings"
 )
 
 // A Polynomial is represented as a slice of coefficients ordered increasingly by degree.
@@ -9,14 +11,13 @@ import (
 //
 
 type Polynomial struct {
-	coeffs []float64
+	coeffs     []float64
 	sturmChain []*Polynomial
-	solveMode SolvingMethod
+	solveMode  SolvingMethod
 }
 
-
 // CreatePolynomial returns a new Polynomial
-func CreatePolynomial(coefficients ...float64) (*Polynomial) {
+func CreatePolynomial(coefficients ...float64) *Polynomial {
 	var newPolynomial Polynomial
 
 	stripped := append([]float64{}, coefficients...)
@@ -25,7 +26,7 @@ func CreatePolynomial(coefficients ...float64) (*Polynomial) {
 	for _, coeff := range coefficients {
 		if coeff == 0.0 {
 			stripped = stripped[1:]
-		} else if math.IsNaN(coeff){
+		} else if math.IsNaN(coeff) {
 			panic("Cannot create polynomial with NaN coefficient!")
 		} else {
 			break
@@ -39,24 +40,23 @@ func CreatePolynomial(coefficients ...float64) (*Polynomial) {
 	return &newPolynomial
 }
 
-func (poly *Polynomial) RoundCoeffs(){
+func (poly *Polynomial) RoundCoeffs() {
 	for idx, coeff := range poly.coeffs {
 		poly.coeffs[idx] = Round(coeff)
 	}
 }
 
 // Creates simple power polynomial, eg. x^3
-func CreatePower(power int) (*Polynomial) {
+func CreatePower(power int) *Polynomial {
 	coeffs := []float64{}
 	coeffs = append(coeffs, 1.0)
 
 	for i := power; i > 0; i-- {
 		coeffs = append(coeffs, 0.0)
-	} 
+	}
 
 	return CreatePolynomial(coeffs...)
 }
-
 
 func (poly *Polynomial) Degree() int {
 	// Coefficients should be maintained in such a way that allow the
@@ -64,62 +64,64 @@ func (poly *Polynomial) Degree() int {
 	return len(poly.coeffs) - 1
 }
 
-func (poly *Polynomial) MakeMonic(){
+func (poly *Polynomial) MakeMonic() {
 	// Divides the polynomial with the leading coefficient to make the polynomial monic
 	l := poly.LeadingCoeff()
 
-	for idx, coeff := range poly.coeffs{
+	for idx, coeff := range poly.coeffs {
 		poly.coeffs[idx] = coeff / l
 	}
 }
 
-
 func (poly *Polynomial) IsMonic() bool {
 	n := len(poly.coeffs)
-	if n <= 1 { return false }
+	if n <= 1 {
+		return false
+	}
 
 	return poly.coeffs[0] == 1.0
-}	
-
+}
 
 // At returns the value of the polynomial evaluated at x.
 func (poly *Polynomial) At(x float64) float64 {
 	// Implement Horner's Method
 	n := len(poly.coeffs)
-	if n == 0 { return 0 }
+	if n == 0 {
+		return 0
+	}
 
 	out := poly.coeffs[0]
 
 	for i := 1; i < n; i++ {
-		out = out * x + poly.coeffs[i]
-	}    
+		out = out*x + poly.coeffs[i]
+	}
 
 	return Round(out)
 }
-
 
 // AtComplex returns the value of the polynomial evaluated at z
 func (poly *Polynomial) AtComplex(z complex128) complex128 {
 	// Implement Horner's Method for complex input z
 	t := complex(0, 0)
-	if len(poly.coeffs) == 0 { return t }
-	
-	for _, c := range poly.coeffs {
-		t = t * z + complex(c, 0)
+	if len(poly.coeffs) == 0 {
+		return t
 	}
 
-    return RoundC(t)
+	for _, c := range poly.coeffs {
+		t = t*z + complex(c, 0)
+	}
+
+	return RoundC(t)
 }
 
 func (poly *Polynomial) IsZero() bool {
 	return poly.Degree() == 0 && poly.coeffs[0] == 0.0
 }
 
-
-
-
-func (poly *Polynomial) computeSturmChain(){
-	if poly.IsZero() { return }
+func (poly *Polynomial) computeSturmChain() {
+	if poly.IsZero() {
+		return
+	}
 	var sturmChain []*Polynomial
 	var rem *Polynomial
 	var tmp Polynomial
@@ -144,13 +146,11 @@ func (poly *Polynomial) computeSturmChain(){
 	poly.sturmChain = sturmChain
 }
 
-
-
 func (poly *Polynomial) LeadingCoeff() float64 {
 	return poly.coeffs[0]
 }
 
-// EuclideanDiv aka. Polynomial Long Division 
+// EuclideanDiv aka. Polynomial Long Division
 // divides the polynomial by another polynomial and returns the quotient and the remainder
 //
 // https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclidean_division
@@ -165,45 +165,37 @@ func (poly1 *Polynomial) EuclideanDiv(poly2 *Polynomial) (*Polynomial, *Polynomi
 		panic("EuclideanDiv division by zero")
 	}
 
+	quotDegree := poly1.Degree() - poly2.Degree()
+	quotCoeffs := make([]float64, quotDegree+1)
+	var d *Polynomial
+	var shift int
+	var factor float64
 
-    quotDegree := poly1.Degree() - poly2.Degree()
-    quotCoeffs := make([]float64, quotDegree + 1)
-    var d *Polynomial
-    var shift int
-    var factor float64
+	r := poly1
 
-    r := poly1
+	for r.Degree() >= poly2.Degree() {
+		shift = r.Degree() - poly2.Degree()
+		d = poly2.ShiftRight(shift)
 
-    for r.Degree() >= poly2.Degree() {
-    	shift = r.Degree() - poly2.Degree()
-    	d = poly2.ShiftRight(shift)
+		factor = r.LeadingCoeff() / d.LeadingCoeff()
+		quotCoeffs[quotDegree-shift] = factor
+		d = d.ScalarMult(factor)
+		r = r.Sub(d)
+	}
 
-    	factor = r.LeadingCoeff() / d.LeadingCoeff()
-    	quotCoeffs[quotDegree - shift] = factor
-    	d = d.ScalarMult(factor)
-    	r = r.Sub(d)
-    }
-
-
-    quotient := CreatePolynomial(quotCoeffs...)
-    return quotient, r
+	quotient := CreatePolynomial(quotCoeffs...)
+	return quotient, r
 }
-
-
 
 func (poly *Polynomial) ShiftRight(offset int) *Polynomial {
 	if offset < 0 {
 		panic("invalid offset")
 	}
-	shiftedCoeffs := make([]float64, len(poly.coeffs) + offset)
+	shiftedCoeffs := make([]float64, len(poly.coeffs)+offset)
 	copy(shiftedCoeffs, poly.coeffs)
 	poly = CreatePolynomial(shiftedCoeffs...)
 	return poly
 }
-
-
-
-
 
 // Subdivision of polynomials, returns result as a new polynomial
 func (poly1 *Polynomial) Sub(poly2 *Polynomial) *Polynomial {
@@ -233,13 +225,10 @@ func (poly1 *Polynomial) Sub(poly2 *Polynomial) *Polynomial {
 	for i := 0; i < maxNumCoeffs; i++ {
 		diffCoeffs[i] = coeffs1[i] - coeffs2[i]
 	}
-	
+
 	newPoly := CreatePolynomial(diffCoeffs...)
 	return newPoly
 }
-
-
-
 
 func (poly1 *Polynomial) Mult(poly2 *Polynomial) *Polynomial {
 	prodCoeffs := make([]float64, poly1.Degree()+poly2.Degree()+1)
@@ -264,10 +253,8 @@ func (poly *Polynomial) ScalarMult(s float64) *Polynomial {
 
 	newPoly := CreatePolynomial(coeffs...)
 
-
 	return newPoly
 }
-
 
 func (poly1 *Polynomial) Add(poly2 *Polynomial) *Polynomial {
 
@@ -302,12 +289,55 @@ func (poly1 *Polynomial) Add(poly2 *Polynomial) *Polynomial {
 	return sum
 }
 
+// String returns a string representation of the polynomial
+func (poly *Polynomial) String() string {
+	lc := len(poly.coeffs)
+	if lc == 0 {
+		return "0"
+	}
 
+	if lc == 1 {
+		if poly.coeffs[0] > 0 {
+			return fmt.Sprintf("%0.3f", poly.coeffs[0])
+		} else {
+			return fmt.Sprintf("- %0.3f", -poly.coeffs[0])
+		}
+	}
 
+	var s = strings.Builder{}
+	for i := 0; i < lc; i++ {
+		if poly.coeffs[i] == 0 {
+			continue
+		}
 
+		coeff := poly.coeffs[i]
+		sign := " + "
+		if poly.coeffs[i] < 0 {
+			coeff = -coeff
+			sign = " - "
+		}
 
-
-
-
-
-
+		if i == 0 {
+			if poly.coeffs[i] < 0 {
+				s.WriteString(sign[1:])
+			}
+			if lc > 2 {
+				s.WriteString(fmt.Sprintf("%0.3fx^%d", coeff, lc-1))
+				continue
+			} else {
+				s.WriteString(fmt.Sprintf("%0.3fx", coeff))
+				continue
+			}
+		} else if i == lc-1 {
+			s.WriteString(sign)
+			s.WriteString(fmt.Sprintf("%0.3f", coeff))
+		} else if i == lc-2 {
+			s.WriteString(sign)
+			s.WriteString(fmt.Sprintf("%0.3fx", coeff))
+		} else {
+			s.WriteString(sign)
+			s.WriteString(fmt.Sprintf("%0.3fx^%d", coeff, i))
+		}
+	}
+	return s.String()
+}
