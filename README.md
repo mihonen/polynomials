@@ -21,7 +21,7 @@ derivative := poly.Derivative()
 ```
 
 ## Root Solving
-Golynomials has three methods for solving roots of polynomials. 
+The package has three methods for solving roots of polynomials. 
 
 | Method               | Complex Roots |  Average solve time<sup>1</sup>  | Robustness |
 | -----------          | -----------   | --------------------------- |      -----------|
@@ -32,7 +32,7 @@ Golynomials has three methods for solving roots of polynomials.
 <sup>1</sup> *Tested with 5 runs using polynomial:* $P(x) = 1.13x^4 - 5.0x^3 + 12.0x^2 -2.8x + 3.213$
 
 
-Golynomials uses Quadratic formula to solve roots for simple qudratic polynomials. The default method for higher order polynomials computes the companion matrix of the polynomial and finds the eigenvalues of the matrix using [mat package](https://pkg.go.dev/gonum.org/v1/gonum/mat). 
+The package uses Quadratic formula to solve roots for simple qudratic polynomials. The default method for higher order polynomials computes the companion matrix of the polynomial and finds the eigenvalues of the matrix using [mat package](https://pkg.go.dev/gonum.org/v1/gonum/mat). 
 
 
 
@@ -111,7 +111,7 @@ roots, err := poly.Roots()
 
 ## Precision
 
-Golynomials solves roots to the 9th decimal by default. This can be adjusted in config.go if needed.
+The package solves roots to the 9th decimal by default. This can be adjusted in config.go if needed.
 
 
 ## Testing
