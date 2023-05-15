@@ -13,7 +13,7 @@ import (
 type Polynomial struct {
 	coeffs     []float64
 	sturmChain []*Polynomial
-	solveMode  SolvingMethod
+	SolveMode  SolvingMethod
 }
 
 // CreatePolynomial returns a new Polynomial
@@ -36,7 +36,7 @@ func CreatePolynomial(coefficients ...float64) *Polynomial {
 	newPolynomial.coeffs = append([]float64{}, stripped...)
 	//newPolynomial.RoundCoeffs()
 
-	newPolynomial.solveMode = defaultSolvingMethod
+	newPolynomial.SolveMode = defaultSolvingMethod
 	return &newPolynomial
 }
 

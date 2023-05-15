@@ -62,7 +62,7 @@ func (poly *Polynomial) RealRoots() ([]float64, error){
 		complexRoots := poly.QuadraticRoots()
 		realRoots = getRealParts(complexRoots)
 	} else {
-		switch poly.solveMode {
+		switch poly.SolveMode {
 		case DurandKerner:
 
 			complexRoots, err := poly.ComplexRootsDurandKerner()
@@ -103,7 +103,7 @@ func (poly *Polynomial) ComplexRoots() ([]complex128, error){
 		return poly.QuadraticRoots(), nil
 
 	} else {
-		switch poly.solveMode {
+		switch poly.SolveMode {
 		case DurandKerner:
 			return poly.ComplexRootsDurandKerner()
 
