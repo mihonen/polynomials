@@ -44,9 +44,9 @@ The third available method is the [Durand-Kerner method](https://en.wikipedia.or
     
     
 
-Used method can be changed by changing the field solveMode of the polynomial. For example
+Used method can be changed by changing the field SolveMode of the polynomial. For example
 ```
-poly.solveMode = DurandKerner
+poly.SolveMode = polynomials.DurandKerner
 
 ```
 
