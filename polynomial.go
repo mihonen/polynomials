@@ -150,7 +150,7 @@ func (poly *Polynomial) LeadingCoeff() float64 {
 	return poly.coeffs[0]
 }
 
-func (poly *Polynomial) Coefficients() []float64 {
+func (poly *Polynomial) Coeffs() []float64 {
 	return poly.coeffs[:]
 }
 
