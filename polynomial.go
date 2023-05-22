@@ -150,6 +150,10 @@ func (poly *Polynomial) LeadingCoeff() float64 {
 	return poly.coeffs[0]
 }
 
+func (poly *Polynomial) Coeffs() []float64 {
+	return poly.coeffs[:]
+}
+
 // EuclideanDiv aka. Polynomial Long Division
 // divides the polynomial by another polynomial and returns the quotient and the remainder
 //
