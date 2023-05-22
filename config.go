@@ -6,13 +6,9 @@ package polynomials
 
 
 
-
-// The number of iterations used in Newton's Method implmentation in root solving functions.
-const (
-	durandKernerMaxIter = 5000
-	maxNewtonIterations = 25
-	roundingDecimalPlaces = 12
-	epsNewton = 1e-10 // max error allowed
-	epsDurand = 1e-16
-	defaultSolvingMethod = Eigenvalue
-)
+var DurandKernerMaxIter = 5000
+var MaxNewtonIterations = 25
+var RoundingDecimalPlaces = 12
+var EpsNewton = 1e-10 // max error allowed
+var EpsDurand = 1e-10
+var DefaultSolvingMethod = Eigenvalue

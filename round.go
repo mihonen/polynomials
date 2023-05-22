@@ -15,14 +15,14 @@ import (
 
 
 func Round(value float64) float64 {
-	n := math.Pow(10.0, float64(roundingDecimalPlaces))
+	n := math.Pow(10.0, float64(RoundingDecimalPlaces))
 	rounded := float64(math.Round(n * value) / n)
 	return rounded
 }
 
 // Complex Round
 func RoundC(z complex128) complex128{
-	n := math.Pow(10.0, float64(roundingDecimalPlaces))
+	n := math.Pow(10.0, float64(RoundingDecimalPlaces))
 	roundedA := float64(math.Round(n * real(z)) / n)
 	roundedB := float64(math.Round(n * imag(z)) / n)
 

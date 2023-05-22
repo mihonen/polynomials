@@ -381,6 +381,7 @@ func TestQuadraticComplex(t *testing.T) {
 
 func TestString(t *testing.T) {
 	for test_poly, solution := range map[*Polynomial]string{
+		CreatePolynomial(5.5, 3.2, -1.1, 4.3, -2.0, 3.0): "5.500x^5 + 3.200x^4 - 1.100x^3 + 4.300x^2 - 2.000x + 3.000",
 		CreatePolynomial(1.0, -2.0, 3.0): "1.000x^2 - 2.000x + 3.000",
 		CreatePolynomial(1.0):            "1.000",
 		CreatePolynomial(-1.0):           "- 1.000",

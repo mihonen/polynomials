@@ -53,7 +53,7 @@ func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 
 	max_delta := 1.0
 
-	for i := 0; i < durandKernerMaxIter; i++ {
+	for i := 0; i < DurandKernerMaxIter; i++ {
 		max_delta = 0
 		for k := 0; k < n; k++ {
 			// deno := complex(1.0, 0.0)
@@ -71,7 +71,7 @@ func (poly *Polynomial) DurandKernerRoots() ([]complex128, error){
 		}
 		               
 		max_delta = max_delta * max_delta
-		if max_delta < epsDurand {
+		if max_delta < EpsDurand {
 			break
 		}           
 	}

@@ -16,7 +16,7 @@ func (poly *Polynomial) NewtonMethod(guess float64) (float64, error) {
 	prev  := root
 
 	var derivAtRoot float64
-	for i := 0; i < maxNewtonIterations; i++ {
+	for i := 0; i < MaxNewtonIterations; i++ {
 		derivAtRoot = deriv.At(root)
 		// In the case that the derivative evaluates to zero, return the current guess.
 		if derivAtRoot == 0.0 {
@@ -24,7 +24,7 @@ func (poly *Polynomial) NewtonMethod(guess float64) (float64, error) {
 		}
 		prev = root
 		root -= poly.At(root) / derivAtRoot
-		if math.Abs(prev - root) < epsNewton {
+		if math.Abs(prev - root) < EpsNewton {
 			return root, nil
 		}
 	}

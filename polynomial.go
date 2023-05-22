@@ -36,7 +36,7 @@ func CreatePolynomial(coefficients ...float64) *Polynomial {
 	newPolynomial.coeffs = append([]float64{}, stripped...)
 	//newPolynomial.RoundCoeffs()
 
-	newPolynomial.SolveMode = defaultSolvingMethod
+	newPolynomial.SolveMode = DefaultSolvingMethod
 	return &newPolynomial
 }
 
@@ -336,7 +336,7 @@ func (poly *Polynomial) String() string {
 			s.WriteString(fmt.Sprintf("%0.3fx", coeff))
 		} else {
 			s.WriteString(sign)
-			s.WriteString(fmt.Sprintf("%0.3fx^%d", coeff, i))
+			s.WriteString(fmt.Sprintf("%0.3fx^%d", coeff, lc - i - 1))
 		}
 	}
 	return s.String()
