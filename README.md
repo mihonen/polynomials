@@ -131,4 +131,7 @@ go test
 
 - [x] Implement more robust complex root finding algorithm, that finds the eigenvalues of the companion matrix
 
+## Credits
+This project is partly based on [polygo](https://github.com/SeanJxie/polygo) by [Sean Xie](https://github.com/SeanJxie). We acknowledge and appreciate their work in the initial stages of this project.
+
 
