@@ -261,36 +261,35 @@ func (poly *Polynomial) ScalarMult(s float64) *Polynomial {
 }
 
 func (poly1 *Polynomial) Add(poly2 *Polynomial) *Polynomial {
-
-	var maxNumCoeffs int
 	coeffs1 := poly1.coeffs
 	coeffs2 := poly2.coeffs
 
-	// Pad "shorter" polynomial with 0s.
+	// determine "longer" and "shorter" coeffs
+
+	var longer, shorter *[]float64
 	if len(coeffs1) > len(coeffs2) {
-		maxNumCoeffs = len(coeffs1)
-		for len(coeffs2) < maxNumCoeffs {
-			coeffs2 = append(coeffs2, 0.0)
-		}
-
-	} else if len(coeffs1) < len(coeffs2) {
-		maxNumCoeffs = len(coeffs2)
-		for len(coeffs1) < maxNumCoeffs {
-			coeffs1 = append(coeffs1, 0.0)
-		}
+		longer = &coeffs1
+		shorter = &coeffs2
 	} else {
-		maxNumCoeffs = len(coeffs1)
+		longer = &coeffs2
+		shorter = &coeffs1
 	}
 
-	// Add coefficients with matching degrees.
-	sumCoeffs := make([]float64, maxNumCoeffs)
+	// pad "shorter" coeff with zeros
 
-	for i := 0; i < maxNumCoeffs; i++ {
-		sumCoeffs[i] = coeffs1[i] + coeffs2[i]
+	delta := len(*longer) - len(*shorter)
+	for ; delta > 0; delta-- {
+		*shorter = append([]float64{0}, *shorter...)
 	}
 
-	sum := CreatePolynomial(sumCoeffs...)
-	return sum
+	// add corresponding coeffs
+
+	coeffsSum := make([]float64, len(*longer))
+	for i := range coeffsSum {
+		coeffsSum[i] = coeffs1[i] + coeffs2[i]
+	}
+
+	return CreatePolynomial(coeffsSum...)
 }
 
 // String returns a string representation of the polynomial
@@ -340,7 +339,7 @@ func (poly *Polynomial) String() string {
 			s.WriteString(fmt.Sprintf("%0.3fx", coeff))
 		} else {
 			s.WriteString(sign)
-			s.WriteString(fmt.Sprintf("%0.3fx^%d", coeff, lc - i - 1))
+			s.WriteString(fmt.Sprintf("%0.3fx^%d", coeff, lc-i-1))
 		}
 	}
 	return s.String()
