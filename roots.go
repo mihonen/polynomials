@@ -60,21 +60,16 @@ func (poly *Polynomial) RealRoots() ([]float64, error){
 		return nil, errors.New("polynomial with no coefficients has no roots")
 	} else if poly.Degree() == 1 {
 		// Linear polynomial: ax + b = 0
-		// If degree is 1, we can solve for the root using -b/a
 		a := poly.coeffs[0]
 		b := poly.coeffs[1]
 
-		// Check if a == 0 (which would make it not a valid linear equation)
 		if a == 0 {
 			if b == 0 {
-				// If both a and b are 0, all values of x are solutions (infinite solutions)
 				return []float64{}, nil
 			} else {
-				// If a == 0 but b != 0, the equation has no solution (inconsistent equation)
 				return nil, errors.New("no solution")
 			}
 		}
-		// Solve for x: x = -b/a
 		root := -b / a
 		realRoots = append(realRoots, root)
 	} else if poly.Degree() == 2 {

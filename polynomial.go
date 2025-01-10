@@ -61,7 +61,11 @@ func CreatePower(power int) *Polynomial {
 func (poly *Polynomial) Degree() int {
 	// Coefficients should be maintained in such a way that allow the
 	// number of coefficients to be one less than the degree of the polynomial.
-	return len(poly.coeffs) - 1
+	deg := len(poly.coeffs) - 1
+	if deg < 0{
+		return 0
+	}
+	return deg
 }
 
 func (poly *Polynomial) MakeMonic() {
