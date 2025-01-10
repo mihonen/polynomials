@@ -20,6 +20,7 @@ func TestPolynomialLongDivision(t *testing.T) {
 
 }
 
+
 func TestShiftRight(t *testing.T) {
 	poly := CreatePolynomial(1.0, 2.0, 3.0)
 
@@ -94,6 +95,54 @@ func TestMonic(t *testing.T) {
 	fmt.Println("Monic Poly ............ OK")
 }
 
+
+func TestRealRootsDegree1(t *testing.T) {
+
+	// Polynomial: 2x - 4 = 0, which has a root x = 2
+	coeffs := []float64{2, -4}
+
+	poly := CreatePolynomial(coeffs...)
+
+	roots, err := poly.RealRoots()
+	if err != nil {
+		t.Fatalf(`RealRoots() errored: %v`, err)
+	}
+
+	expectedRoot := 2.0
+
+	solutions := make(map[float64]bool)
+	solutions[expectedRoot] = true
+
+	for _, root := range roots {
+		for solution := range solutions {
+			if root == Round(solution) {
+				delete(solutions, solution)
+				break
+			}
+		}
+	}
+
+	var resultStr string = "\n"
+	for _, r := range roots {
+		resultStr += fmt.Sprintf("%v\n", r)
+	}
+
+	// Expected solution
+	var solutionStr string = "\n"
+	solutionStr += fmt.Sprintf("%v\n", Round(expectedRoot))
+
+	if len(solutions) != 0 {
+		t.Fatalf(`Failed to find all correct real roots! 
+		Found roots: %s. 
+		Correct roots: %s`,
+			resultStr,
+			solutionStr)
+	}
+
+	fmt.Println("Real Roots 1 .......... OK")
+}
+
+
 func TestRealRoots1(t *testing.T) {
 
 	// a := 1.0
@@ -148,8 +197,63 @@ func TestRealRoots1(t *testing.T) {
 			solutionStr)
 	}
 
-	fmt.Println("Real Roots ............ OK")
+	fmt.Println("Real Roots 2 .......... OK")
 }
+
+
+func TestDurandKerner(t *testing.T){
+	 poly := CreatePolynomial(1, -26.736792368991583, 189.80002662743738, -148.2021748787599, 30.65476667810361)
+	 poly.SolveMode = DurandKerner
+	 roots, err := poly.ComplexRoots()
+	 if err != nil {
+	 	t.Fatalf(`RealRoots() errored: %v`, err)
+	 }
+
+	 sol1 := complex(0.407229454336, 0)
+	 sol2 := complex(0.449563948234, 0)
+	 sol3 := complex(12.918832236262, 0)
+	 sol4 := complex(12.961166730159, 0)
+
+	 solutions := make(map[complex128]bool)
+	 solutions[sol1] = true
+	 solutions[sol2] = true
+	 solutions[sol3] = true
+	 solutions[sol4] = true
+
+	 for _, root := range roots {
+
+	 	for solution := range solutions {
+	 		if root == RoundC(solution) {
+	 			delete(solutions, solution)
+	 			break
+	 		}
+	 	}
+	 }
+
+	 var resultStr string = "\n"
+	 for _, r := range roots {
+	 	resultStr += fmt.Sprintf("%v\n", r)
+	 }
+	 allSolutions := []complex128{sol1, sol2, sol3, sol4}
+	 var solutionStr string = "\n"
+	 for _, s := range allSolutions {
+	 	solutionStr += fmt.Sprintf("%v\n", s)
+	 }
+
+	 if len(solutions) != 0 {
+	 	t.Fatalf(`Failed to find all correct roots! 
+	 	Found roots: %s. 
+	 	Correct roots: %s`,
+	 		resultStr,
+	 		solutionStr)
+	 }
+
+
+	 fmt.Println("DurandKerner .......... OK")
+
+}
+
+
 
 func TestDerivative(t *testing.T) {
 	a := 1.0
